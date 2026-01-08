@@ -3,54 +3,6 @@ a = "borra esto luego"
 
 import datetime
 
-###Diccionarios###
-
-game_context = {
-    "idGame": "",
-    "idAdventure": "",
-    "nameAdventure": "",
-    "user": "",
-    "idUser": "",
-    "idChar": "",
-    "characterName": ""
-}
-
-adventures = { 
-    1: {
-        "Name": "nombre de la aventura id 1",
-        "Description": "descripcion de la aventura id 1",
-        "characters": [1,2] #lista con los ides de personajes id 1
-    }
-}
-
-characters = {
-    1: "nombre el personaje id 1"
-}
-
-idAnswers_ByStep_Aventure = {
-    ("idAnswer",)
-}
-
-id_by_steps = {
-    1: {
-        "Description": "Descripcion del paso", 
-        "answers_in_step": (1,2,3), #tupla  con los ids de las opciones en este paso
-        "Final_Step": 0, #0 si no es un paso final 1 si si lo es
-        }
-}
-
-replayAdventures = {
-    "idGame": {
-        "idUser": 0,#id del usuario
-        "Username": "Nombre del usuario",
-        "idAdventure": 1, #id de la aventura
-        "Name": "Nombre de la aventura",
-        "date": datetime.datetime(2025,12,25,19,5,48), #fecha en formato datetime
-        "idCharacter": 1, #id del personaje usado
-        "CharacterName": "Nombre del personaje"
-        }
-}
-
 ###Funciones###
 
 def get_answers_bystep_adventure():
@@ -111,3 +63,55 @@ def userExists(user):
     print(a)
 def replay(choices):
     print(a)
+
+###Diccionarios###
+
+game_context = {
+    # "idGame": "",
+    # "idAdventure": "",
+    # "nameAdventure": "",
+    # "user": "",
+    # "idUser": "",
+    # "idChar": "",
+    # "characterName": ""
+}
+
+adventures = { 
+    # 1: {
+    #     "Name": "nombre de la aventura id 1",
+    #     "Description": "descripcion de la aventura id 1",
+    #     "characters": [1,2] #lista con los ides de personajes id 1
+    # }
+}
+
+characters = {
+    # 1: "nombre el personaje id 1"
+}
+
+idAnswers_ByStep_Aventure = {
+    # (1,3): { #(idAnswers_ByStep_Adventure, idByStep_Adventure)
+    #     "Description": "descripcion del paso",
+    #     "Resolution_answer": "Texto en el campo resolution answer BBDD",
+    #     "NextStep_Adventure": 5 #Id del proximo paso
+    # }
+}
+
+id_by_steps = {
+    # 1: {
+    #     "Description": "Descripcion del paso", 
+    #     "answers_in_step": (1,2,3), #tupla  con los ids de las opciones en este paso
+    #     "Final_Step": 0, #0 si no es un paso final 1 si si lo es
+    #     }
+}
+
+replayAdventures = {
+    # "idGame": {
+    #     "idUser": 0,#id del usuario
+    #     "Username": "Nombre del usuario",
+    #     "idAdventure": 1, #id de la aventura
+    #     "Name": "Nombre de la aventura",
+    #     "date": datetime.datetime(2025,12,25,19,5,48), #fecha en formato datetime
+    #     "idCharacter": 1, #id del personaje usado
+    #     "CharacterName": "Nombre del personaje"
+    #     }
+}
