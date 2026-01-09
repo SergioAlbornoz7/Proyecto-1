@@ -55,9 +55,32 @@ nav a{
     font-weight: bold;
 }
 /*MAIN*/
+.publicidad{
+  display: flex;
+  align-items:center;
+  align-content: center;
+  justify-content: center;
+  flex-direction: column;
+}
 .imagen{
-  padding: 2rem 4rem;
-  box-shadow: 2rem;
+  padding: 6rem;
+  max-height: 10rem;
+  margin-top: 5rem;
+  transition:all 0.3s ease 0s;
+}
+.imagen:hover{
+  transform: scale(3,2);
+}
+
+.texto-publicitario{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10rem;
+}
+.caja{
+  padding: auto;
+  background-color: gray;
 }
 /*MAIN*/
 /*Parte final con copyright y iconos para todas las páginas*/
