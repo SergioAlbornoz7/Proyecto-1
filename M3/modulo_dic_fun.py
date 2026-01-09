@@ -155,7 +155,23 @@ def insertCurrentGame(idGame,idUser,idChar,idAdventure):
         )
 
 def getUsers():
-    print(a)
+    conexion = mysql.connector.connect(
+        host = "localhost",
+        port = 3306,
+        user = "root",
+        password = "Qwerty1_",
+        database = "proyectomx"
+    )
+    cursor = conexion.cursor()
+    dic = {}
+    cursor.execute("""
+        SELECT Username, Password, idUser
+        FROM user
+        """)
+    for i in tuple(cursor.fetchall):
+        dic[i[0]] = [i[1],i[2]]
+    return dic
+
 def getUserIds():
     print(a)
 def insertUser(id, user,password):
