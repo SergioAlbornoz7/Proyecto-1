@@ -7,12 +7,12 @@ import mysql.connector
 ###Diccionarios###
 
 game_context = {
-    "idGame": "",
-    "idAdventure": "",
+    "idGame": "", #digit
+    "idAdventure": "", #digit
     "nameAdventure": "",
     "user": "",
-    "idUser": "",
-    "idChar": "",
+    "idUser": "", #digit
+    "idChar": "", #digit
     "characterName": ""
 }
 
@@ -60,11 +60,32 @@ replayAdventures = {
 
 def get_answers_bystep_adventure():
     if idAnswers_ByStep_Aventure:
-        return(idAnswers_ByStep_Aventure)
+        return idAnswers_ByStep_Aventure
+    
 def get_adventures_with_chars():
     return(adventures)
+
 def get_id_bystep_adventure():
-    return(id_by_steps)
+    dic = {}
+    conexion = mysql.connector.connect(
+        host = "localhost",
+        port = 3306,
+        user = "root",
+        password = "Qwerty1_",
+        database = "proyectomx"
+    )
+    cursor = conexion.cursor()
+    cursor.execute("""
+        SELECT idByStep_Adventure
+        FROM bystep_adventure
+        WHERE idAdventure = %s
+        """, (game_context['idAdventure'],)
+        )
+    list = tuple(row[0] for row in cursor.fetchall())
+    for i in list:
+        dic[i] = id_by_steps[i]
+    return(dic)
+
 def get_first_step_adventure():
     conexion = mysql.connector.connect(
         host = "localhost",
@@ -74,12 +95,20 @@ def get_first_step_adventure():
         database = "proyectomx"
     )
     cursor = conexion.cursor()
-    cursor.execute("SELECT")
-    return cursor
+    cursor.execute("""
+        SELECT MIN(idByStep_Adventure)
+        FROM id_by_steps
+        WHERE idAdventure = %s
+        """, (game_context['idAdventure'],)
+        )
+    return cursor.fetchone()[0]
+
 def get_characters():
-    return(characters)
+    return characters
+
 def getReplayAdventures():
     return replayAdventures
+
 def getChoices():
     conexion = mysql.connector.connect(
         host = "localhost",
@@ -89,8 +118,13 @@ def getChoices():
         database = "proyectomx"
     )
     cursor = conexion.cursor()
-    cursor.execute("SELECT")
-    conexion.close()
+    cursor.execute("""
+        SELECT idByStep_Adventure, idAnswers_ByStep_Adventure
+        From choices
+        WHERE idGame = %s
+        """, (game_context['idGame'],)
+        )
+    return tuple(cursor.fetchall())
 def getIdGames():
     conexion = mysql.connector.connect(
         host = "localhost",
@@ -100,11 +134,26 @@ def getIdGames():
         database = "proyectomx"
     )
     cursor = conexion.cursor()
-    cursor.execute("SELECT idGame FROM game")
-    answer = cursor.fetchall()
-    return tuple()
-def insertCurrentGame(idGame,idUser,isChar,idAdventure):
-    print(a)
+    cursor.execute("""
+        SELECT idGame
+        FROM game
+        """)
+    return tuple(row[0] for row in cursor.fetchall())
+
+def insertCurrentGame(idGame,idUser,idChar,idAdventure):
+    conexion = mysql.connector.connect(
+        host = "localhost",
+        port = 3306,
+        user = "root",
+        password = "Qwerty1_",
+        database = "proyectomx"
+    )
+    cursor = conexion.cursor()
+    cursor.execute("""
+        INSERT into 'game' values (%s,%s,%s,%s,%s)
+        """,(idGame,idUser,idChar,idAdventure,datetime.datetime.now())
+        )
+
 def getUsers():
     print(a)
 def getUserIds():
