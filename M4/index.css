@@ -89,7 +89,7 @@ nav a{
 }
 .hero1{
   margin-top: 10rem;
-  margin-right: 90%;
+  margin-right: 85%;
 }
 .fila::before{
   content: "✅ ";
@@ -112,6 +112,50 @@ nav a{
   animation-range: entry 20% cover 40%;
 }
 
+/*-----------*/
+.vectorial {
+  display: flex;
+  flex-direction: column;
+  margin-top: -20rem;
+  
+  
+}
+.ficha {
+  width: 140px;
+  margin: 40px auto;
+  display: block;
+  fill: #2ecc71;
+  animation: pulse 2s ease-in-out infinite;
+}
+.ficha .centro {
+  fill: #145a32;
+  animation: brillo 2s ease-in-out infinite alternate;
+}
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+
+  50% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+}
+@keyframes brillo {
+  from {
+    fill: #145a32;
+  }
+  to {
+    fill: #f1c40f;
+  }
+}
+/*-----------*/
 
 /*MAIN*/
 /*Parte final con copyright y iconos para todas las páginas*/
