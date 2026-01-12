@@ -219,7 +219,7 @@ nav a{
   flex-direction: column;
   font-family: "Oswald", sans-serif;
   background-color: #f5f5f5;
-  height: 200vh;
+  height: 500vh;
 }
 .caja-ins{
   margin-top: 10rem;
@@ -236,7 +236,7 @@ nav a{
 
 }
 .tarjeta{
-  background-color: rgb(156, 147, 147);
+  background-color: rgb(243, 238, 238);
   display: flex;
   flex-direction: column;
   width: 15rem;
@@ -251,3 +251,32 @@ nav a{
   height: 10rem;
 }
 
+.instrucciones{
+  text-align: center;
+}
+.instrucciones h1{
+  text-decoration:underline;
+}
+
+.contenedor-mecanica{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 3rem;
+}
+.tarjeta1{
+  background-color: rgb(184, 176, 176);
+  display: flex;
+  flex-direction: column;
+  width: 15rem;
+  padding: 4rem;
+  border-radius: 8px;
+  text-align: center;
+  margin-left: 3rem;
+}
+
+.tarjeta1 img{
+  border: 2px solid;
+  width: 15rem;
+  height: 10rem;
+}
