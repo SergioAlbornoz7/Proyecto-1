@@ -84,6 +84,8 @@ def get_id_bystep_adventure():
     list = tuple(row[0] for row in cursor.fetchall())
     for i in list:
         dic[i] = id_by_steps[i]
+    cursor.close()
+    conexion.close()
     return(dic)
 
 def get_first_step_adventure():
@@ -101,7 +103,10 @@ def get_first_step_adventure():
         WHERE idAdventure = %s
         """, (game_context['idAdventure'],)
         )
-    return cursor.fetchone()[0]
+    result = cursor.fetchone()[0]
+    cursor.close()
+    conexion.close()
+    return result
 
 def get_characters():
     return characters
@@ -124,7 +129,11 @@ def getChoices():
         WHERE idGame = %s
         """, (game_context['idGame'],)
         )
-    return tuple(cursor.fetchall())
+    result = tuple(cursor.fetchall())
+    cursor.close()
+    conexion.close()
+    return result
+
 def getIdGames():
     conexion = mysql.connector.connect(
         host = "localhost",
@@ -138,7 +147,10 @@ def getIdGames():
         SELECT idGame
         FROM game
         """)
-    return tuple(row[0] for row in cursor.fetchall())
+    result = tuple(row[0] for row in cursor.fetchall())
+    cursor.close()
+    conexion.close()
+    return result
 
 def insertCurrentGame(idGame,idUser,idChar,idAdventure):
     conexion = mysql.connector.connect(
@@ -150,11 +162,15 @@ def insertCurrentGame(idGame,idUser,idChar,idAdventure):
     )
     cursor = conexion.cursor()
     cursor.execute("""
-        INSERT into 'game' values (%s,%s,%s,%s,%s)
+        INSERT into game values (%s,%s,%s,%s,%s)
         """,(idGame,idUser,idChar,idAdventure,datetime.datetime.now())
         )
+    conexion.commit()
+    cursor.close()
+    conexion.close()
 
 def getUsers():
+    dic = {}
     conexion = mysql.connector.connect(
         host = "localhost",
         port = 3306,
@@ -163,33 +179,134 @@ def getUsers():
         database = "proyectomx"
     )
     cursor = conexion.cursor()
-    dic = {}
     cursor.execute("""
         SELECT Username, Password, idUser
         FROM user
         """)
-    for i in tuple(cursor.fetchall):
-        dic[i[0]] = [i[1],i[2]]
+    for i in tuple(cursor.fetchall()):
+        dic[i[0]] = {"password":i[1],"idUser":i[2]}
+    cursor.close()
+    conexion.close()
     return dic
 
 def getUserIds():
-    print(a)
+    list = [[],[]]
+    conexion = mysql.connector.connect(
+        host = "localhost",
+        port = 3306,
+        user = "root",
+        password = "Qwerty1_",
+        database = "proyectomx"
+    )
+    cursor = conexion.cursor()
+    cursor.execute("""
+        SELECT Username,idUser
+        FROM user
+        """)
+    for i in tuple(cursor.fetchall()):
+        list[0].append(i[0])
+        list[1].append(i[1])
+    cursor.close()
+    conexion.close()
+    return list
+
 def insertUser(id, user,password):
-    print(a)
+    conexion = mysql.connector.connect(
+        host = "localhost",
+        port = 3306,
+        user = "root",
+        password = "Qwerty1_",
+        database = "proyectomx"
+    )
+    cursor = conexion.cursor()
+    cursor.execute("""
+        INSERT into user values (%s,%s,%s)
+        """,(id,user,password)
+        )
+    conexion.commit()
+    cursor.close()
+    conexion.close()
 def get_table(query):
-    print(a)
+    conexion = mysql.connector.connect(
+        host = "localhost",
+        port = 3306,
+        user = "root",
+        password = "Qwerty1_",
+        database = "proyectomx"
+    )
+    cursor = conexion.cursor()
+    cursor.execute(query)
+    result = tuple(cursor.fetchall())
+    cursor.close()
+    conexion.close()
+    return result
 def checkUserbdd(user,password):
-    print(a)
+    conexion = mysql.connector.connect(
+        host = "localhost",
+        port = 3306,
+        user = "root",
+        password = "Qwerty1_",
+        database = "proyectomx"
+    )
+    cursor = conexion.cursor()
+    cursor.execute("""
+        SELECT Username, Password
+        FROM user
+        WHERE Username = %s
+        """, (user,)
+        )
+    list = tuple(cursor.fetchall())
+    if not list:
+        return 0
+    else:
+        for i in list:
+            if i[1] == password:
+                return 1
+        return -1
+
 def setIdGame():
     print(a)
 def insertCurrentChoice(idGame,actual_id_step,id_answer):
-    print(a)
+    conexion = mysql.connector.connect(
+        host = "localhost",
+        port = 3306,
+        user = "root",
+        password = "Qwerty1_",
+        database = "proyectomx"
+    )
+    cursor = conexion.cursor()
+    cursor.execute("""
+        INSERT into choices values (%s,%s,%s)
+        """,(idGame,actual_id_step,id_answer)
+        )
+    conexion.commit()
+    cursor.close()
+    conexion.close()
 def formatText(text,lenLine,split):
-    print(a)
+    words = text.split()
+    lines = []
+    current = ""
+    for i in words:
+        if len(current) + len(i) + 1 > lenLine:
+            lines.append(current)
+            current = i
+        else:
+            if current:
+                current += f" {i}"
+            else:
+                current = i
+    if current:
+        lines.append(current)
+    return split.join(lines)
+
 def getHeader(text):
-    print(a)
+    return "*"*70+"/n"+ f"{text}".center(70,"=")+"/n"+"*"*70
 def getFormatedBodyColumns(tupla_texts,tupla_sizes,margin=0):
-    print(a)
+    words = [tupla_texts[0].split(),tupla_texts[1].split(),tupla_texts[2].split()]
+    lines = [[],[],[]]
+    current = ["","",""]
+    return
+    
 def getFormatedAdventures(adventures):
     print(a)
 def getFormatedAnswers(idAnswer,text,lenLine,leftMargin):
