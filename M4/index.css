@@ -196,6 +196,78 @@ nav a{
   background-color: #f5f5f5;
   height: 200vh;
 }
+#historia1{
+  display: flex;
+  flex-direction: column;
+  gap: 5rem;
+  font-family: "Oswald", sans-serif;
+  background-color: #f5f5f5;
+  padding: 5rem 0;
+}
+.historia-conten{
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  margin-left: 10%;
+  max-width: 80%;
+
+
+}
+.tarjeta-descripcion{
+  background-color: rgb(243, 238, 238);
+  display: flex;
+  flex-direction: column;
+  width: 15rem;
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.tarjeta-descripcion img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+.tarjeta-descripcion h3 {
+  margin-top: 1rem;
+}
+.descripcion {
+  background-color: wheat;
+  padding: 3rem;
+  border-radius: 8px;
+  flex: 1;
+}
+.tarjeta2 {
+  width: 15rem;
+  height: 22rem;
+  perspective: 1000px;
+}
+.tarjeta-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+.tarjeta2:active .tarjeta-inner {
+  transform: rotateY(180deg);
+}
+.tarjeta2:hover .tarjeta-inner {
+  transform: rotateY(180deg);
+}
+.tarjeta2-front,
+.tarjeta2-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+.tarjeta2-back {
+  transform: rotateY(180deg);
+}
+/*-----------------------------------------*/
 
 /*CONTACTO*/
 #contacto {
