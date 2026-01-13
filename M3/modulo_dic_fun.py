@@ -302,28 +302,147 @@ def formatText(text,lenLine,split):
 def getHeader(text):
     return "*"*70+"/n"+ f"{text}".center(70,"=")+"/n"+"*"*70
 def getFormatedBodyColumns(tupla_texts,tupla_sizes,margin=0):
-    words = [tupla_texts[0].split(),tupla_texts[1].split(),tupla_texts[2].split()]
-    lines = [[],[],[]]
-    current = ["","",""]
-    return
+    it1 = iter(tupla_texts[0].split())
+    it2 = iter(tupla_texts[1].split())
+    it3 = iter(tupla_texts[2].split())
+    lines = [0,0,0]
+    result = ""
+    for i in it1:
+        if lines[0]+len(i)+1 > tupla_sizes[0]:
+            result += " "*(tupla_sizes[0]-lines[0]+margin)
+            lines [1] = 0
+            for j in it2:
+                if lines[1] > tupla_sizes[1]:
+                    result += " "*(tupla_sizes[1]-lines[1]+margin)
+                    lines [1] = 0
+                    for k in it3:
+                        if lines[2] > tupla_sizes[2]:
+                            result += "/n"
+                            lines[2] = 0
+                            break
+                        elif lines[2] == 0:
+                            result += k
+                            lines[2] += len(k)
+                        else:
+                            result += " "+k
+                            lines[2] += len(k)+1
+                    break
+                elif lines[1] == 0:
+                    result += j
+                    lines[1] += len(j)
+                else:
+                    result += " "+j
+                    lines[1] += len(j)+1
+        elif lines[0] == 0:
+            result += i
+            lines[0] += len(i)
+        else:
+            result += " "+i
+            lines[0] += len(i)+1
+    return result
     
 def getFormatedAdventures(adventures):
-    print(a)
+    desc = adventures["Description"].split()
+    line = 0
+    result = \
+        "Adventures".center(100,"=")+"/n/n"+\
+        "Id Adventure".ljust(14)+"Adventure".ljust(36)+"Description".ljust(50)+"/n"+\
+        "*"*100+"/n"
+    for i in adventures:
+        result += f"{i}".ljust(14)+f"{i["Name"]}".ljust(36)
+        for j in desc:
+            if line > 0:
+                if line + len(j) > 50:
+                    result += "/n"+"".ljust(14)+"".ljust(36)+j+" "
+                    line = len(j)+1
+                else:
+                    result += j + " "
+                    line += len(j)+1
+            else:
+                result += j + " "
+                line = len(j)+1
+        result += "/n"
+    return result
+
 def getFormatedAnswers(idAnswer,text,lenLine,leftMargin):
-    print(a)
+    words = text.split()
+    result = " "*leftMargin + f"{idAnswer})"
+    line = len(f"{idAnswer})")
+    for i in words:
+        if line+len(i)+1 > lenLine:
+            result += "/n" + " "*leftMargin + i
+            line = len(i)
+        else:
+            result += f" {i}"
+            line += len(f" {i}")
+    return result
 def getHeadeForTableFromTuples(t_name_columns,t_size_columns,title=""):
-    print(a)
+    total = 0
+    for i in t_size_columns:
+        total += i
+    result = f"{title}".center(total,"=")+"/n"
+    for i in range(len(t_name_columns)):
+        result += f"{t_name_columns[i]}".ljust(t_size_columns[i])
+    result += "\n" + "*"*total
+    return result
 def getTableFromDict(tuple_of_keys,weigth_of_columns,dict_of_data):
-    print(a)
+    result = ""
+    for i in dict_of_data:
+        for j in range(len(tuple_of_keys)):
+            result += dict_of_data[i][tuple_of_keys[j]].ljust(weigth_of_columns[j])
+        result += "/n"
+    return result
+
 def getOpt(textOpts="",inputOptText="",rangeList=[],dictionary={},exceptions=[]):
-    print(a)
+    print (textOpts)
+    opc = input(f"{inputOptText}")
+    for i in rangeList:
+        if opc == i:
+            return opc
+    for i in exceptions:
+        if opc == i:
+            return opc
+    if dictionary:
+        for i in dictionary:
+            if opc == i:
+                return opc
+    else:
+        print("Invalid option, select a valid one")
+    
 def getFormatedTable(queryTable,title=""):
-    print(a)
+    result = title.ljust()
 def checkPassword(password):
-    print(a)
+    if len(password) in range(8,13):
+        for i in range(len(password)):
+            print(a)
 def checkUser(user):
-    print(a)
+    if user.isalnum():
+        return True
+    else:
+        print("user can only have alphanumeric characters")
+        return False
 def userExists(user):
-    print(a)
+    conexion = mysql.connector.connect(
+        host = "localhost",
+        port = 3306,
+        user = "root",
+        password = "Qwerty1_",
+        database = "proyectomx"
+    )
+    cursor = conexion.cursor()
+    cursor.execute("""
+        SELECT Username
+        From user
+        Where user = %s
+        """,(user)
+        )
+    if cursor == "none":
+        cursor.close()
+        conexion.close()
+        return False
+    else:
+        cursor.close()
+        conexion.close()
+        return True
 def replay(choices):
     print(a)
