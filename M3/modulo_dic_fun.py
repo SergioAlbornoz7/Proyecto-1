@@ -1,4 +1,3 @@
-a = 1
 ###Librerias###
 
 import datetime
@@ -265,7 +264,21 @@ def checkUserbdd(user,password):
         return -1
 
 def setIdGame():
-    print(a)
+    conexion = mysql.connector.connect(
+        host = "localhost",
+        port = 3306,
+        user = "root",
+        password = "Qwerty1_",
+        database = "proyectomx"
+    )
+    cursor = conexion.cursor()
+    cursor.execute("""
+        INSERT into game values (NULL,%s,%s,%s,%s)
+        """,(idUser,idCharacter,idAdventure,datetime.datetime.now())
+        )
+    conexion.commit()
+    cursor.close()
+    conexion.close()
 def insertCurrentChoice(idGame,actual_id_step,id_answer):
     conexion = mysql.connector.connect(
         host = "localhost",
@@ -474,4 +487,4 @@ def userExists(user):
         conexion.close()
         return True
 def replay(choices):
-    print(a) 
+    print("a") 
