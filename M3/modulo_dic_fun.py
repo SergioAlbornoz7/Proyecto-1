@@ -410,11 +410,40 @@ def getOpt(textOpts="",inputOptText="",rangeList=[],dictionary={},exceptions=[])
         print("Invalid option, select a valid one")
     
 def getFormatedTable(queryTable,title=""):
-    result = title.ljust()
+    sp_list = []
+    columns = len(queryTable[0])
+    wide = 120/columns
+    result = title.ljust(120,"=")+"/n"
+    for i in range(columns):
+        result += queryTable[0][i].ljust(wide)
+    result += "\n"+"*"*120+"\n\n"
+    for i in range(1,len(queryTable)):
+        for j in range(columns):
+            sp_list.append(iter(queryTable[i][j]))    
+
 def checkPassword(password):
+    flg_may = False
+    flg_min = False
+    flg_num = False
+    flg_cha = False
     if len(password) in range(8,13):
         for i in range(len(password)):
-            print(a)
+            if password[i].isupper():
+                flg_may = True
+            if password[i].islower():
+                flg_min = True
+            if password[i].isdigit():
+                flg_num = True
+            else:
+                flg_cha = True
+        if flg_min and flg_may and flg_cha and flg_num:
+            return True
+        else:
+            print("Invalid password")
+            return False
+    else:
+        print("Invalid password")
+        return False
 def checkUser(user):
     if user.isalnum():
         return True
@@ -445,4 +474,4 @@ def userExists(user):
         conexion.close()
         return True
 def replay(choices):
-    print(a)
+    print(a) 
