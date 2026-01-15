@@ -423,16 +423,53 @@ def getOpt(textOpts="",inputOptText="",rangeList=[],dictionary={},exceptions=[])
         print("Invalid option, select a valid one")
     
 def getFormatedTable(queryTable,title=""):
-    sp_list = []
     columns = len(queryTable[0])
-    wide = 120/columns
-    result = title.ljust(120,"=")+"/n"
-    for i in range(columns):
-        result += queryTable[0][i].ljust(wide)
-    result += "\n"+"*"*120+"\n\n"
-    for i in range(1,len(queryTable)):
-        for j in range(columns):
-            sp_list.append(iter(queryTable[i][j]))    
+    wide = (120 // columns)
+    result = title.ljust(120, "=") + "\n"
+    for head in queryTable[0]:
+        result += str(head).ljust(wide)
+    result += "\n" + "*" * 120 + "\n\n"
+    for i in range(1, len(queryTable)):
+        palabras = [str(cell or "").split() for cell in queryTable[i]]
+        sp_iter = [iter(p) for p in palabras]
+        pending = [None] * columns
+        check = [len(p) > 0 for p in palabras]
+        while any(check):
+            linea_fila = ""
+            for k in range(columns):
+                if not check[k]:
+                    linea_fila += "".ljust(wide)
+                    continue
+                palabra = pending[k]
+                pending[k] = None
+                if palabra is None:
+                    try:
+                        palabra = next(sp_iter[k])
+                    except StopIteration:
+                        check[k] = False
+                        linea_fila += "".ljust(wide)
+                        continue
+                linea_celda = ""
+                while palabra:
+                    if len(palabra) > wide and not linea_celda:
+                        linea_celda = palabra
+                        palabra = None
+                        break
+                    espacio = 1 if linea_celda else 0
+                    if len(linea_celda) + espacio + len(palabra) <= wide:
+                        linea_celda += (" " if linea_celda else "") + palabra
+                        try:
+                            palabra = next(sp_iter[k])
+                        except StopIteration:
+                            check[k] = False
+                            palabra = None
+                    else:
+                        pending[k] = palabra
+                        palabra = None
+                linea_fila += linea_celda.ljust(wide)
+            result += linea_fila + "\n"
+        result += "\n"
+    return result
 
 def checkPassword(password):
     flg_may = False
