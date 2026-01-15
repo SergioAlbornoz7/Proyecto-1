@@ -80,8 +80,8 @@ def get_id_bystep_adventure():
         WHERE idAdventure = %s
         """, (game_context['idAdventure'],)
         )
-    list = tuple(row[0] for row in cursor.fetchall())
-    for i in list:
+    ids = tuple(row[0] for row in cursor.fetchall())
+    for i in ids:
         dic[i] = id_by_steps[i]
     cursor.close()
     conexion.close()
@@ -98,7 +98,7 @@ def get_first_step_adventure():
     cursor = conexion.cursor()
     cursor.execute("""
         SELECT MIN(idByStep_Adventure)
-        FROM id_by_steps
+        FROM bystep_adventure
         WHERE idAdventure = %s
         """, (game_context['idAdventure'],)
         )
@@ -189,7 +189,7 @@ def getUsers():
     return dic
 
 def getUserIds():
-    list = [[],[]]
+    ides = [[],[]]
     conexion = mysql.connector.connect(
         host = "localhost",
         port = 3306,
@@ -203,11 +203,11 @@ def getUserIds():
         FROM user
         """)
     for i in tuple(cursor.fetchall()):
-        list[0].append(i[0])
-        list[1].append(i[1])
+        ides[0].append(i[0])
+        ides[1].append(i[1])
     cursor.close()
     conexion.close()
-    return list
+    return ides
 
 def insertUser(id, user,password):
     conexion = mysql.connector.connect(
@@ -254,11 +254,11 @@ def checkUserbdd(user,password):
         WHERE Username = %s
         """, (user,)
         )
-    list = tuple(cursor.fetchall())
-    if not list:
+    uspsw = tuple(cursor.fetchall())
+    if not uspsw:
         return 0
     else:
-        for i in list:
+        for i in uspsw:
             if i[1] == password:
                 return 1
         return -1
@@ -274,7 +274,7 @@ def setIdGame():
     cursor = conexion.cursor()
     cursor.execute("""
         INSERT into game values (NULL,%s,%s,%s,%s)
-        """,(game_context["idUser"],game_context["idCharacter"],game_context["idAdventure"],datetime.datetime.now())
+        """,(game_context["idUser"],game_context["idChar"],game_context["idAdventure"],datetime.datetime.now())
         )
     conexion.commit()
     cursor.close()
@@ -313,7 +313,7 @@ def formatText(text,lenLine,split):
     return split.join(lines)
 
 def getHeader(text):
-    return "*"*70+"/n"+ f"{text}".center(70,"=")+"/n"+"*"*70
+    return "*"*70+"\n"+ f"{text}".center(70,"=")+"\n"+"*"*70
 def getFormatedBodyColumns(tupla_texts,tupla_sizes,margin=0):
     it1 = iter(tupla_texts[0].split())
     it2 = iter(tupla_texts[1].split())
@@ -325,12 +325,12 @@ def getFormatedBodyColumns(tupla_texts,tupla_sizes,margin=0):
             result += " "*(tupla_sizes[0]-lines[0]+margin)
             lines [1] = 0
             for j in it2:
-                if lines[1] > tupla_sizes[1]:
+                if lines[1] + len(j) + 1 > tupla_sizes[1]:
                     result += " "*(tupla_sizes[1]-lines[1]+margin)
                     lines [1] = 0
                     for k in it3:
-                        if lines[2] > tupla_sizes[2]:
-                            result += "/n"
+                        if lines[2] + len(k) + 1 > tupla_sizes[2]:
+                            result += "\n"
                             lines[2] = 0
                             break
                         elif lines[2] == 0:
@@ -355,18 +355,18 @@ def getFormatedBodyColumns(tupla_texts,tupla_sizes,margin=0):
     return result
     
 def getFormatedAdventures(adventures):
-    desc = adventures["Description"].split()
-    line = 0
     result = \
-        "Adventures".center(100,"=")+"/n/n"+\
-        "Id Adventure".ljust(14)+"Adventure".ljust(36)+"Description".ljust(50)+"/n"+\
-        "*"*100+"/n"
+        "Adventures".center(100,"=")+"\n\n"+\
+        "Id Adventure".ljust(14)+"Adventure".ljust(36)+"Description".ljust(50)+"\n"+\
+        "*"*100+"\n"
     for i in adventures:
-        result += f"{i}".ljust(14)+f"{i["Name"]}".ljust(36)
+        line = 0
+        desc = adventures[i]["Description"].split()
+        result += f"{i}".ljust(14)+f"{adventures[i]["Name"]}".ljust(36)
         for j in desc:
             if line > 0:
                 if line + len(j) > 50:
-                    result += "/n"+"".ljust(14)+"".ljust(36)+j+" "
+                    result += "\n"+"".ljust(14)+"".ljust(36)+j+" "
                     line = len(j)+1
                 else:
                     result += j + " "
@@ -374,7 +374,7 @@ def getFormatedAdventures(adventures):
             else:
                 result += j + " "
                 line = len(j)+1
-        result += "/n"
+        result += "\n"
     return result
 
 def getFormatedAnswers(idAnswer,text,lenLine,leftMargin):
@@ -383,7 +383,7 @@ def getFormatedAnswers(idAnswer,text,lenLine,leftMargin):
     line = len(f"{idAnswer})")
     for i in words:
         if line+len(i)+1 > lenLine:
-            result += "/n" + " "*leftMargin + i
+            result += "\n" + " "*leftMargin + i
             line = len(i)
         else:
             result += f" {i}"
@@ -393,7 +393,7 @@ def getHeadeForTableFromTuples(t_name_columns,t_size_columns,title=""):
     total = 0
     for i in t_size_columns:
         total += i
-    result = f"{title}".center(total,"=")+"/n"
+    result = f"{title}".center(total,"=")+"\n"
     for i in range(len(t_name_columns)):
         result += f"{t_name_columns[i]}".ljust(t_size_columns[i])
     result += "\n" + "*"*total
@@ -403,14 +403,14 @@ def getTableFromDict(tuple_of_keys,weigth_of_columns,dict_of_data):
     for i in dict_of_data:
         for j in range(len(tuple_of_keys)):
             result += dict_of_data[i][tuple_of_keys[j]].ljust(weigth_of_columns[j])
-        result += "/n"
+        result += "\n"
     return result
 
 def getOpt(textOpts="",inputOptText="",rangeList=[],dictionary={},exceptions=[]):
     print (textOpts)
     opc = input(f"{inputOptText}")
     for i in rangeList:
-        if opc == i:
+        if opc == str(i):
             return opc
     for i in exceptions:
         if opc == i:
@@ -480,9 +480,9 @@ def checkPassword(password):
         for i in range(len(password)):
             if password[i].isupper():
                 flg_may = True
-            if password[i].islower():
+            elif password[i].islower():
                 flg_min = True
-            if password[i].isdigit():
+            elif password[i].isdigit():
                 flg_num = True
             else:
                 flg_cha = True
@@ -512,16 +512,12 @@ def userExists(user):
     cursor.execute("""
         SELECT Username
         From user
-        Where user = %s
-        """,(user)
+        Where Username = %s
+        """,(user,)
         )
-    if cursor == "none":
-        cursor.close()
-        conexion.close()
-        return False
-    else:
-        cursor.close()
-        conexion.close()
-        return True
+    exists = cursor.fetchone() is not None
+    cursor.close()
+    conexion.close()
+    return exists
 def replay(choices):
     print("a") 
