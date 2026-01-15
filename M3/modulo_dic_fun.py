@@ -5,6 +5,8 @@ import mysql.connector
 
 ###Diccionarios###
 
+yes = ["y","s","yes","si"]
+
 game_context = {
     "idGame": "", #digit
     "idAdventure": "", #digit
@@ -57,11 +59,11 @@ replayAdventures = {
 
 ###Funciones###
 
-def get_answers_bystep_adventure():
+def get_answers_bystep_adventure(): #devuelve el diccionario answers_bystep_adventure
     if idAnswers_ByStep_Aventure:
         return idAnswers_ByStep_Aventure
     
-def get_adventures_with_chars():
+def get_adventures_with_chars(): #devuelve el diccionario adventures
     return(adventures)
 
 def get_id_bystep_adventure():
@@ -87,7 +89,7 @@ def get_id_bystep_adventure():
     conexion.close()
     return(dic)
 
-def get_first_step_adventure():
+def get_first_step_adventure(): #Devuelve el primer paso de una aventura
     conexion = mysql.connector.connect(
         host = "localhost",
         port = 3306,
@@ -107,13 +109,13 @@ def get_first_step_adventure():
     conexion.close()
     return result
 
-def get_characters():
+def get_characters(): #devuelve el diccionario characters
     return characters
 
-def getReplayAdventures():
+def getReplayAdventures(): #devuelve el diccionario replayAdventures
     return replayAdventures
 
-def getChoices():
+def getChoices(): 
     conexion = mysql.connector.connect(
         host = "localhost",
         port = 3306,
@@ -133,7 +135,7 @@ def getChoices():
     conexion.close()
     return result
 
-def getIdGames():
+def getIdGames(): #devuelve un diccionario con los ID de todas las partidas en la BBDD
     conexion = mysql.connector.connect(
         host = "localhost",
         port = 3306,
@@ -151,7 +153,7 @@ def getIdGames():
     conexion.close()
     return result
 
-def insertCurrentGame(idGame,idUser,idChar,idAdventure):
+def insertCurrentGame(idGame,idUser,idChar,idAdventure): #guarda en la BBDD la partida actual
     conexion = mysql.connector.connect(
         host = "localhost",
         port = 3306,
@@ -168,7 +170,7 @@ def insertCurrentGame(idGame,idUser,idChar,idAdventure):
     cursor.close()
     conexion.close()
 
-def getUsers():
+def getUsers(): #devuelve un diccionario con toda la tabla de users de la BBDD
     dic = {}
     conexion = mysql.connector.connect(
         host = "localhost",
@@ -188,7 +190,7 @@ def getUsers():
     conexion.close()
     return dic
 
-def getUserIds():
+def getUserIds(): #devuelve Una lista con los ID y el Username
     ides = [[],[]]
     conexion = mysql.connector.connect(
         host = "localhost",
@@ -209,7 +211,7 @@ def getUserIds():
     conexion.close()
     return ides
 
-def insertUser(id, user,password):
+def insertUser(id, user,password): #Crea un nuevo usuario en la BBDD
     conexion = mysql.connector.connect(
         host = "localhost",
         port = 3306,
@@ -218,14 +220,14 @@ def insertUser(id, user,password):
         database = "proyectomx"
     )
     cursor = conexion.cursor()
-    cursor.execute("""
-        INSERT into user values (%s,%s,%s)
-        """,(id,user,password)
+    cursor.execute(f"""
+        INSERT into user values ({id},%s,%s)
+        """,(user,password)
         )
     conexion.commit()
     cursor.close()
     conexion.close()
-def get_table(query):
+def get_table(query): #Permite hacer cualquier Query a la BBDD
     conexion = mysql.connector.connect(
         host = "localhost",
         port = 3306,
@@ -239,7 +241,7 @@ def get_table(query):
     cursor.close()
     conexion.close()
     return result
-def checkUserbdd(user,password):
+def checkUserbdd(user,password): #Checkea un user y pswd en la BBDD 0 no existe,1 todo correcto, -1 contraseña incorrecta
     conexion = mysql.connector.connect(
         host = "localhost",
         port = 3306,
@@ -263,7 +265,7 @@ def checkUserbdd(user,password):
                 return 1
         return -1
 
-def setIdGame():
+def setIdGame(): #Crea una nueva partida en la BBDD
     conexion = mysql.connector.connect(
         host = "localhost",
         port = 3306,
@@ -279,7 +281,7 @@ def setIdGame():
     conexion.commit()
     cursor.close()
     conexion.close()
-def insertCurrentChoice(idGame,actual_id_step,id_answer):
+def insertCurrentChoice(idGame,actual_id_step,id_answer): #Inserta en la BBDD la decision tomada por el jugador
     conexion = mysql.connector.connect(
         host = "localhost",
         port = 3306,
@@ -295,7 +297,7 @@ def insertCurrentChoice(idGame,actual_id_step,id_answer):
     conexion.commit()
     cursor.close()
     conexion.close()
-def formatText(text,lenLine,split):
+def formatText(text,lenLine,split): #Formatea texto
     words = text.split()
     lines = []
     current = ""
@@ -312,9 +314,9 @@ def formatText(text,lenLine,split):
         lines.append(current)
     return split.join(lines)
 
-def getHeader(text):
+def getHeader(text): #Formatea cabecera
     return "*"*70+"\n"+ f"{text}".center(70,"=")+"\n"+"*"*70
-def getFormatedBodyColumns(tupla_texts,tupla_sizes,margin=0):
+def getFormatedBodyColumns(tupla_texts,tupla_sizes,margin=0): #Formatea tres textos en tres columnas
     it1 = iter(tupla_texts[0].split())
     it2 = iter(tupla_texts[1].split())
     it3 = iter(tupla_texts[2].split())
@@ -354,7 +356,7 @@ def getFormatedBodyColumns(tupla_texts,tupla_sizes,margin=0):
             lines[0] += len(i)+1
     return result
     
-def getFormatedAdventures(adventures):
+def getFormatedAdventures(adventures): #Devuelve un string con el diccionario adventures formateado como tabla
     result = \
         "Adventures".center(100,"=")+"\n\n"+\
         "Id Adventure".ljust(14)+"Adventure".ljust(36)+"Description".ljust(50)+"\n"+\
@@ -377,7 +379,7 @@ def getFormatedAdventures(adventures):
         result += "\n"
     return result
 
-def getFormatedAnswers(idAnswer,text,lenLine,leftMargin):
+def getFormatedAnswers(idAnswer,text,lenLine,leftMargin): #Formatea las decisiones en un paso
     words = text.split()
     result = " "*leftMargin + f"{idAnswer})"
     line = len(f"{idAnswer})")
@@ -389,7 +391,7 @@ def getFormatedAnswers(idAnswer,text,lenLine,leftMargin):
             result += f" {i}"
             line += len(f" {i}")
     return result
-def getHeadeForTableFromTuples(t_name_columns,t_size_columns,title=""):
+def getHeadeForTableFromTuples(t_name_columns,t_size_columns,title=""): #Genera una cabecera de tabla
     total = 0
     for i in t_size_columns:
         total += i
@@ -398,7 +400,7 @@ def getHeadeForTableFromTuples(t_name_columns,t_size_columns,title=""):
         result += f"{t_name_columns[i]}".ljust(t_size_columns[i])
     result += "\n" + "*"*total
     return result
-def getTableFromDict(tuple_of_keys,weigth_of_columns,dict_of_data):
+def getTableFromDict(tuple_of_keys,weigth_of_columns,dict_of_data): #Genera una tabla en base a un diccionario
     result = ""
     for i in dict_of_data:
         for j in range(len(tuple_of_keys)):
@@ -406,23 +408,20 @@ def getTableFromDict(tuple_of_keys,weigth_of_columns,dict_of_data):
         result += "\n"
     return result
 
-def getOpt(textOpts="",inputOptText="",rangeList=[],dictionary={},exceptions=[]):
-    print (textOpts)
-    opc = input(f"{inputOptText}")
-    for i in rangeList:
-        if opc == str(i):
-            return opc
-    for i in exceptions:
-        if opc == i:
-            return opc
-    if dictionary:
-        for i in dictionary:
-            if opc == i:
+def getOpt(textOpts="",inputOptText="",rangeList=[],exceptions=[]): #Genera un menu
+    while True:
+        print (textOpts)
+        opc = input(f"{inputOptText}")
+        for i in rangeList:
+            if opc == str(i):
                 return opc
-    else:
-        print("Invalid option, select a valid one")
+        for i in exceptions:
+            if opc == i:
+                return rangeList[-1]
+        else:
+            print("Invalid option, select a valid one")
     
-def getFormatedTable(queryTable,title=""):
+def getFormatedTable(queryTable,title=""): #Genera una tabla en base a una tupla
     columns = len(queryTable[0])
     wide = (120 // columns)
     result = title.ljust(120, "=") + "\n"
@@ -471,7 +470,7 @@ def getFormatedTable(queryTable,title=""):
         result += "\n"
     return result
 
-def checkPassword(password):
+def checkPassword(password): #Chekea si una contraseña es segura
     flg_may = False
     flg_min = False
     flg_num = False
@@ -494,13 +493,19 @@ def checkPassword(password):
     else:
         print("Invalid password")
         return False
-def checkUser(user):
+def checkUser(user): #Chekea si un usuario es valido
     if user.isalnum():
-        return True
+        if len(user) < 10:
+            if len(user) >= 6:
+                return True
+            else:
+                print("User too short min 6 characters")
+        else:
+            print("User too long max 10 characters")
     else:
         print("user can only have alphanumeric characters")
         return False
-def userExists(user):
+def userExists(user): #Chekea si un usuario ya existe en la BBDD
     conexion = mysql.connector.connect(
         host = "localhost",
         port = 3306,
