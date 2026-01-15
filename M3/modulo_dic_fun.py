@@ -274,7 +274,7 @@ def setIdGame():
     cursor = conexion.cursor()
     cursor.execute("""
         INSERT into game values (NULL,%s,%s,%s,%s)
-        """,(idUser,idCharacter,idAdventure,datetime.datetime.now())
+        """,(game_context["idUser"],game_context["idCharacter"],game_context["idAdventure"],datetime.datetime.now())
         )
     conexion.commit()
     cursor.close()
