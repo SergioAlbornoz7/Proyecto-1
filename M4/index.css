@@ -54,6 +54,110 @@ nav a{
     color: black;
     font-weight: bold;
 }
+/*MAIN*/
+.hero{
+  display: flex;
+  align-items:center;
+  align-content: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.imagen{
+  padding: 6rem;
+  max-height: 10rem;
+  margin-top: 5rem;
+  transition:all 0.3s ease 0s;
+}
+.imagen:hover{
+  transform: scale(3,2);
+}
+.texto-publicitario{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10rem;
+}
+.caja{
+  padding: auto;
+  background-color: gray;
+}
+.caja2{
+  padding: auto;
+  background-color: gray;
+  text-align: center;
+  
+}
+.hero1{
+  margin-top: 10rem;
+  margin-right: 85%;
+}
+.fila::before{
+  content: "✅ ";
+}
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  padding: auto;
+  animation: aparecer linear both;
+  animation-timeline: view();
+  animation-range: entry 20% cover 40%;
+}
+
+/*-----------*/
+.vectorial {
+  display: flex;
+  flex-direction: column;
+  margin-top: -20rem;
+  
+  
+}
+.ficha {
+  width: 140px;
+  margin: 40px auto;
+  display: block;
+  fill: #2ecc71;
+  animation: pulse 2s ease-in-out infinite;
+}
+.ficha .centro {
+  fill: #145a32;
+  animation: brillo 2s ease-in-out infinite alternate;
+}
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+
+  50% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+}
+@keyframes brillo {
+  from {
+    fill: #145a32;
+  }
+  to {
+    fill: #f1c40f;
+  }
+}
+/*-----------*/
+
+/*MAIN*/
 /*Parte final con copyright y iconos para todas las páginas*/
 .footer {
   background-color: #111;
@@ -84,11 +188,176 @@ nav a{
   font-size: 14px;
 }
 
-/*Relleno primera parte de la página*/
+/*HISTORIA*/
 #historia {
   display: flex;
   flex-direction: column;
   font-family: "Oswald", sans-serif;
   background-color: #f5f5f5;
+  height: 600vh;
+}
+#historia1{
+  display: flex;
+  flex-direction: column;
+  gap: 5rem;
+  font-family: "Oswald", sans-serif;
+  background-color: #f5f5f5;
+  padding: 5rem 0;
+}
+.historia-conten{
+  display: flex;
+  align-items: center;
+  gap: 7rem;
+  margin-left: 10%;
+  max-width: 80%;
+
+
+}
+.tarjeta-descripcion{
+  background-color: rgb(243, 238, 238);
+  display: flex;
+  flex-direction: column;
+  width: 15rem;
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.tarjeta-descripcion img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+.tarjeta-descripcion h3 {
+  margin-top: 1rem;
+}
+.descripcion {
+  background-color: wheat;
+  padding: 3rem;
+  border-radius: 8px;
+  flex: 1;
+}
+.tarjeta2 {
+  width: 15rem;
+  height: 22rem;
+  perspective: 1000px;
+}
+.tarjeta-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+.tarjeta2:active .tarjeta-inner {
+  transform: rotateY(180deg);
+}
+.tarjeta2:hover .tarjeta-inner {
+  transform: rotateY(180deg);
+}
+.tarjeta2-front,
+.tarjeta2-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+.tarjeta2-back {
+  transform: rotateY(180deg);
+}
+/*-----------------------------------------*/
+
+/*CONTACTO*/
+#contacto {
+  display: flex;
+  flex-direction: column;
+  font-family: "Oswald", sans-serif;
+  background-color: #f5f5f5;
   height: 200vh;
+}
+/*ABOUT_US*/
+#about_us {
+  display: flex;
+  flex-direction: column;
+  font-family: "Oswald", sans-serif;
+  background-color: #f5f5f5;
+  height: 200vh;
+}
+/*INSTRUCCIONES*/
+#instrucciones {
+  display: flex;
+  flex-direction: column;
+  font-family: "Oswald", sans-serif;
+  background-color: #f5f5f5;
+  height: 300vh;
+}
+.caja-ins{
+  margin-top: 10rem;
+  margin-bottom: 10rem;
+  margin-right: 10rem;
+  margin-left: 10rem;
+  padding: 3rem;
+  display: flex;
+  background-color: gray;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 3rem;
+
+}
+.tarjeta{
+  background-color: rgb(243, 238, 238);
+  display: flex;
+  flex-direction: column;
+  width: 15rem;
+  padding: 4rem;
+  border-radius: 8px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.tarjeta:hover {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.25);
+}
+.tarjeta img{
+  border: 2px solid;
+  width: 15rem;
+  height: 10rem;
+}
+
+.instrucciones{
+  text-align: center;
+}
+.instrucciones h1{
+  text-decoration:underline;
+}
+
+.contenedor-mecanica{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 3rem;
+}
+.tarjeta1{
+  background-color: rgb(184, 176, 176);
+  display: flex;
+  flex-direction: column;
+  width: 15rem;
+  padding: 4rem;
+  border-radius: 8px;
+  text-align: center;
+  margin-left: 3rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+ 
+}
+.tarjeta1:hover {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.25);
+}
+.tarjeta1 img{
+  border: 2px solid;
+  width: 15rem;
+  height: 10rem;
 }
