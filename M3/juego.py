@@ -6,6 +6,7 @@ import modulo_dic_fun as mod
 
 flgs = True #flag para salir del programa
 opc = 0 #opcion menu
+opcr = 0 #opcion menu reports
 flg_log = False #Flag de login
 
 ###Juego###
@@ -46,9 +47,9 @@ while flgs:
             if chk == 1:
                 mod.game_context["user"] = usr
                 idu = mod.get_table(\
-                    "SELECT idUser" \
-                    " FROM user" \
-                    f" WHERE Username = '{usr}'")
+                    "SELECT idUser " \
+                    "FROM user " \
+                    f"WHERE Username = '{usr}'")
                 mod.game_context["idUser"] = idu[0][0]
                 print("inicias sesion")
                 flg_log = True
@@ -99,7 +100,29 @@ while flgs:
     elif opc == 3: #Replay Adventure
         input("Press enter to continue...")
     elif opc == 4: #Reports
-        input("Press enter to continue...")
+        opcr = int(mod.getOpt( \
+                "1)Most used answer\n"+
+                "2)Player with more games played\n"+
+                "3)Games played by user\n"+
+                "4)Back",
+                "Input Option: ",
+                [1,2,3,4],["","back"]
+                ))
+        if opcr == 1:
+            answer =
+            answer = mod.get_table(\
+                "SELECT idAnswers_ByStep_Adventure, COUNT(*) AS repeticiones " \
+                "FROM choices " \
+                "GROUP BY idAnswers_ByStep_Adventure " \
+                "ORDER BY COUNT(*) DESC")
+            print(mod.getFormatedTable(answer,"Most used answer"))
+            input("Press enter to continue...")
+        elif opcr == 2:
+            print("a")
+        elif opcr == 3: 
+            print("a")
+        elif opcr == 4:
+            opc = 0
     elif opc == 5: #Salir
         print("Saliendo del juego")
         flgs = False

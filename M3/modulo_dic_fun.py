@@ -424,7 +424,7 @@ def getOpt(textOpts="",inputOptText="",rangeList=[],exceptions=[]): #Genera un m
 def getFormatedTable(queryTable,title=""): #Genera una tabla en base a una tupla
     columns = len(queryTable[0])
     wide = (120 // columns)
-    result = title.ljust(120, "=") + "\n"
+    result = title.center(120, "=") + "\n"
     for head in queryTable[0]:
         result += str(head).ljust(wide)
     result += "\n" + "*" * 120 + "\n\n"
