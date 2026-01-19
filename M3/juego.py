@@ -14,22 +14,22 @@ flg_log = False #Flag de login
 while flgs:
     if opc == 0: #Menu principal
         if flg_log == False:
-            opc = int(mod.getOpt( \
-                "1)Login\n"+
-                "2)Create user\n"+
-                "3)Replay Adventure\n"+
-                "4)Reports\n"+
-                "5)Exit",
+            opc = int(mod.getOpt("""
+                1)Login\n
+                2)Create user\n
+                3)Replay Adventure\n
+                4)Reports\n
+                5)Exit""",
                 "Input Option: ",
                 [1,2,3,4,5],["e","exit"]
                 ))
         else:
-            opc = int(mod.getOpt( \
-                "1)Logout\n"+
-                "2)Play\n"+
-                "3)Replay Adventure\n"+
-                "4)Reports\n"+
-                "5)Exit",
+            opc = int(mod.getOpt("""
+                1)Logout\n
+                2)Play\n
+                3)Replay Adventure\n
+                4)Reports\n
+                5)Exit""",
                 "Input Option: ",
                 [1,2,3,4,5],["e","exit"]
                 ))
@@ -100,27 +100,56 @@ while flgs:
     elif opc == 3: #Replay Adventure
         input("Press enter to continue...")
     elif opc == 4: #Reports
-        opcr = int(mod.getOpt( \
-                "1)Most used answer\n"+
-                "2)Player with more games played\n"+
-                "3)Games played by user\n"+
-                "4)Back",
+        opcr = int(mod.getOpt("""
+                1)Most used answer\n
+                2)Player with more games played\n
+                3)Games played by user\n
+                4)Back""",
                 "Input Option: ",
                 [1,2,3,4],["","back"]
                 ))
         if opcr == 1:
-            answer =
-            answer = mod.get_table(\
-                "SELECT idAnswers_ByStep_Adventure, COUNT(*) AS repeticiones " \
-                "FROM choices " \
-                "GROUP BY idAnswers_ByStep_Adventure " \
-                "ORDER BY COUNT(*) DESC")
-            print(mod.getFormatedTable(answer,"Most used answer"))
+            answer = mod.get_table("""
+                SELECT 'ID Aventura', 'Nombre Aventura', 'ID Step', 'Descripción Step', 'ID Answer', 'Descripción Answer', 'Veces escogida'
+                UNION ALL
+                SELECT adv.idAdventure, adv.Name, bs.idByStep_Adventure, bs.Description, ans.idAnswers_ByStep_Adventure, ans.Description,
+                COUNT(c.idAnswers_ByStep_Adventure) AS repeticiones
+                FROM answers_bystep_adventure ans
+                JOIN bystep_adventure bs ON ans.idByStep_Adventure = bs.idByStep_Adventure
+                JOIN adventure adv ON bs.idAdventure = adv.idAdventure
+                LEFT JOIN choices c ON ans.idAnswers_ByStep_Adventure = c.idAnswers_ByStep_Adventure
+                GROUP BY adv.idAdventure, adv.Name, bs.idByStep_Adventure, bs.Description, ans.idAnswers_ByStep_Adventure, ans.Description
+                ORDER BY repeticiones DESC
+                """)
+            print(mod.getFormatedTable(answer, "Most used answer"))
             input("Press enter to continue...")
         elif opcr == 2:
-            print("a")
+            answer = mod.get_table("""
+                SELECT 'Nombre de usuario', 'Partidas Jugadas'
+                UNION ALL
+                SELECT u.Username, COUNT(g.idGame) AS partidas_jugadas
+                FROM user u
+                JOIN game g ON u.idUser = g.idUser
+                GROUP BY u.idUser, u.Username
+                ORDER BY partidas_jugadas DESC
+                LIMIT 1
+                """)
+            print(mod.getFormatedTable(answer, "Player with more games played"))
+            input("Press enter to continue...")
         elif opcr == 3: 
-            print("a")
+            usr = input("De que usuario quieres ver las partidas?: ")
+            answer = mod.get_table( """
+                SELECT 'ID Aventura', 'Nombre Aventura', 'Fecha' 
+                UNION ALL 
+                SELECT adv.idAdventure, adv.Name, g.Date 
+                FROM user u 
+                JOIN game g ON u.idUser = g.idUser 
+                JOIN adventure adv ON g.idAdventure = adv.idAdventure 
+                WHERE u.Username = '%s' 
+                ORDER BY g.Date DESC
+                """)%usr
+            print(mod.getFormatedTable(answer, f"Games played by {usr}"))
+            input("Press enter to continue...")
         elif opcr == 4:
             opc = 0
     elif opc == 5: #Salir
