@@ -426,7 +426,7 @@ def getFormatedTable(queryTable,title=""): #Genera una tabla en base a una tupla
     wide = (120 // columns)
     result = title.center(120, "=") + "\n"
     for head in queryTable[0]:
-        result += str(head).ljust(wide)
+        result += (str(head) + " ").ljust(wide)
     result += "\n" + "*" * 120 + "\n\n"
     for i in range(1, len(queryTable)):
         palabras = [str(cell or "").split() for cell in queryTable[i]]
@@ -450,12 +450,13 @@ def getFormatedTable(queryTable,title=""): #Genera una tabla en base a una tupla
                         continue
                 linea_celda = ""
                 while palabra:
-                    if len(palabra) > wide and not linea_celda:
-                        linea_celda = palabra
+                    limite = wide - 1
+                    if len(palabra) > limite and not linea_celda:
+                        linea_celda = palabra[:limite - 1] + "…"
                         palabra = None
                         break
                     espacio = 1 if linea_celda else 0
-                    if len(linea_celda) + espacio + len(palabra) <= wide:
+                    if len(linea_celda) + espacio + len(palabra) <= limite:
                         linea_celda += (" " if linea_celda else "") + palabra
                         try:
                             palabra = next(sp_iter[k])
@@ -465,11 +466,10 @@ def getFormatedTable(queryTable,title=""): #Genera una tabla en base a una tupla
                     else:
                         pending[k] = palabra
                         palabra = None
-                linea_fila += linea_celda.ljust(wide)
+                linea_fila += (linea_celda + " ").ljust(wide)
             result += linea_fila + "\n"
         result += "\n"
     return result
-
 def checkPassword(password): #Chekea si una contraseña es segura
     flg_may = False
     flg_min = False
