@@ -17,7 +17,9 @@ CREATE TABLE bystep_adventure (
   idByStep_Adventure INT primary key,
   idAdventure int,
   Description Varchar(4000),
-  Final_Step TINYINT
+  Final_Step TINYINT,
+  FOREIGN KEY (idAdventure) REFERENCES adventure(idAdventure)
+
 );
 CREATE TABLE answers_bystep_adventure (
   idAnswers_ByStep_Adventure INT primary key,
@@ -40,7 +42,8 @@ CREATE TABLE game (
   idAdventure INT,
   Date Datetime,
   foreign key (idUser) references user(idUser),
-  foreign key (idAdventure) references adventure(idAdventure)
+  foreign key (idAdventure) references adventure(idAdventure),
+  foreign key (idCharacter) references characters(idCharacter)
 );
 CREATE TABLE choices (
   idGame INT,
@@ -48,7 +51,8 @@ CREATE TABLE choices (
   idAnswers_ByStep_Adventure INT,
   foreign key (idGame)references game(idGame),
   foreign key (idByStep_Adventure)references bystep_adventure(idByStep_Adventure),
-  foreign key(idAnswers_ByStep_Adventure)references answers_bystep_adventure(idAnswers_ByStep_Adventure)
+  foreign key(idAnswers_ByStep_Adventure)references answers_bystep_adventure(idAnswers_ByStep_Adventure),
+  PRIMARY KEY (idGame, idByStep_Adventure)
 );
 
 INSERT INTO characters VALUES(1, 'Aria la Exploradora'),(2, 'Dario el Guerrero');
@@ -83,10 +87,3 @@ INSERT INTO game (idGame, idUser, idCharacter, idAdventure, Date) VALUES
 INSERT INTO choices (idGame, idByStep_Adventure, idAnswers_ByStep_Adventure) VALUES
 (1, 1, 1),
 (2, 3, 3);
-
-
-
-
-
-
-

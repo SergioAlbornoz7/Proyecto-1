@@ -46,7 +46,7 @@ while flgs:
             chk = mod.checkUserbdd(usr, pswrd)
             if chk == 1:
                 mod.game_context["user"] = usr
-                idu = mod.get_table(\
+                idu = mod.get_table( \
                     "SELECT idUser " \
                     "FROM user " \
                     f"WHERE Username = '{usr}'")
@@ -95,8 +95,36 @@ while flgs:
                             if tmm.lower() in (i.lower() for i in mod.yes):
                                 opc = 0
                                 flg_pswc = False
-        else: #Juego
-            print("Juego")
+        else: #Juego 
+            flg_gopc = False
+            aviable_adv = [0,]
+            for i in mod.get_adventures_with_chars:
+                aviable_adv.append(i)
+            opcaj = mod.getOpt(mod.getHeaderForTableFromTuples(("Id Adventure","Adventure","Description"),(14,45,46),"Adventures")+"\n"+mod.getTableFromDict(("Name","Description"),(13,46,46),mod.get_adventures_with_chars),"What adventure do you want to play?(0 Go back): ", aviable_adv,)
+            if opcaj.isdigit:
+                opcaj = int(opcaj)
+                if opcaj == 0:
+                    opc = 0
+                else:
+                    for i in aviable_adv:
+                        if opcaj == i:
+                            mod.game_context["idAdventure"] = opcaj
+                            mod.game_context["nameAdventure"] = mod.get_adventures_with_chars[i]["Name"]
+                            flg_gopc = True
+                        if flg_gopc:
+                            break
+                    if flg_gopc:
+                            aviable_cha = mod.get_table( \
+                                "SELECT idCharacter" \
+                                "FROM adventure " \
+                                f"WHERE idAdventure = {mod.game_context["idAdventure"]}"
+                                )
+                            opcha = mod.getOpt("What character do you want to use?(0 Go back): ", aviable_cha,)
+                            opc = 0
+                    else:
+                        print("This adventure id doesn't exist")
+            else: 
+                print("Only digit is valid")
     elif opc == 3: #Replay Adventure
         input("Press enter to continue...")
     elif opc == 4: #Reports
