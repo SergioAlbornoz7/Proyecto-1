@@ -420,7 +420,7 @@ def getFormatedBodyColumns(tupla_texts,tupla_sizes,margin=0): #Formatea tres tex
     
 def getFormatedAdventures(adventures): #Devuelve un string con el diccionario adventures formateado como tabla
     result = \
-        "Adventures".center(100,"=")+"\n\n"+\
+        "Adventures".center(100,"=")+"\n"+\
         "Id Adventure".ljust(14)+"Adventure".ljust(36)+"Description".ljust(50)+"\n"+\
         "*"*100+"\n"
     for i in adventures:
@@ -599,7 +599,8 @@ def userExists(user): #Chekea si un usuario ya existe en la BBDD
     conexion.close()
     return exists
 def replay(choices):
-    print("a")
+    for i in choices:
+            print("a")
 
 ###Diccionarios###
 
