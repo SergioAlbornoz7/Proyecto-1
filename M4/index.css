@@ -160,7 +160,7 @@ ul {
 .ficha {
   width: 120px;
   fill: #2ecc71;
-  animation: pulse 2s ease-in-out infinite;
+  animation: pulse 6s ease-in-out infinite;
 }
 
 .ficha .centro {
