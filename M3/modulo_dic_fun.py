@@ -2,100 +2,119 @@
 
 import datetime
 import mysql.connector
+import textwrap
 
-###Diccionarios###
+###SQL Config###
 
-yes = ["y","s","yes","si"]
-
-game_context = {
-    "idGame": "", #digit
-    "idAdventure": "", #digit
-    "nameAdventure": "",
-    "user": "",
-    "idUser": "", #digit
-    "idChar": "", #digit
-    "characterName": ""
-}
-
-adventures = { 
-    # 1: {
-    #     "Name": "nombre de la aventura id 1",
-    #     "Description": "descripcion de la aventura id 1",
-    #     "characters": [1,2] #lista con los ides de personajes id 1
-    # }
-}
-
-characters = {
-    # 1: "nombre el personaje id 1"
-}
-
-idAnswers_ByStep_Aventure = {
-    # (1,3): { #(idAnswers_ByStep_Adventure, idByStep_Adventure)
-    #     "Description": "descripcion del paso",
-    #     "Resolution_answer": "Texto en el campo resolution answer BBDD",
-    #     "NextStep_Adventure": 5 #Id del proximo paso
-    # }
-}
-
-id_by_steps = {
-    # 1: {
-    #     "Description": "Descripcion del paso", 
-    #     "answers_in_step": (1,2,3), #tupla  con los ids de las opciones en este paso
-    #     "Final_Step": 0, #0 si no es un paso final 1 si si lo es
-    #     }
-}
-
-replayAdventures = {
-    # "idGame": {
-    #     "idUser": 0,#id del usuario
-    #     "Username": "Nombre del usuario",
-    #     "idAdventure": 1, #id de la aventura
-    #     "Name": "Nombre de la aventura",
-    #     "date": datetime.datetime(2025,12,25,19,5,48), #fecha en formato datetime
-    #     "idCharacter": 1, #id del personaje usado
-    #     "CharacterName": "Nombre del personaje"
-    #     }
-}
+hostq = "localhost"
+portq = 3306
+userq = "root"
+passwordq = "Qwerty1_"
+databaseq = "proyectomx"
 
 ###Funciones###
 
 def get_answers_bystep_adventure(): #devuelve el diccionario answers_bystep_adventure
-    if idAnswers_ByStep_Aventure:
-        return idAnswers_ByStep_Aventure
-    
-def get_adventures_with_chars(): #devuelve el diccionario adventures
-    return(adventures)
-
-def get_id_bystep_adventure():
-    dic = {}
     conexion = mysql.connector.connect(
-        host = "localhost",
-        port = 3306,
-        user = "root",
-        password = "Qwerty1_",
-        database = "proyectomx"
-    )
-    cursor = conexion.cursor()
-    cursor.execute("""
-        SELECT idByStep_Adventure
-        FROM bystep_adventure
-        WHERE idAdventure = %s
-        """, (game_context['idAdventure'],)
+        host = hostq,
+        port = portq,
+        user = userq,
+        password = passwordq,
+        database = databaseq
         )
-    ids = tuple(row[0] for row in cursor.fetchall())
-    for i in ids:
-        dic[i] = id_by_steps[i]
+    cursor = conexion.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT idAnswers_ByStep_Adventure, idByStep_Adventure, Description, Resolution_Anwer, NextStep_Adventure
+        FROM answers_bystep_adventure
+        """)
+    raw = cursor.fetchall()
     cursor.close()
     conexion.close()
-    return(dic)
-
+    idAnswers_ByStep_Aventure = {}
+    for i in raw:
+        key = (i["idAnswers_ByStep_Adventure"], i["idByStep_Adventure"])
+        idAnswers_ByStep_Aventure[key] = {
+            "Description": i["Description"],
+            "Resolution_answer": i["Resolution_Anwer"],
+            "NextStep_Adventure": i["NextStep_Adventure"]
+            }
+    return idAnswers_ByStep_Aventure
+def get_adventures_with_chars(): #devuelve el diccionario adventures
+    conexion = mysql.connector.connect(
+        host = hostq,
+        port = portq,
+        user = userq,
+        password = passwordq,
+        database = databaseq
+    )
+    cursor = conexion.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT idAdventure, Name, Description
+        FROM adventure
+        """)
+    aventuras_raw = cursor.fetchall()
+    cursor.execute("""
+        SELECT a.idAdventure, c.idCharacter 
+        FROM adventure a 
+        JOIN characters c ON c.idCharacter = a.idCharacter 
+        """)
+    chars_raw = cursor.fetchall()
+    cursor.close()
+    conexion.close()
+    aventuras = {}
+    for i in aventuras_raw:
+        aventuras[i["idAdventure"]] = {
+            "Name": i["Name"],
+            "Description": i["Description"],
+            "Characters": []
+            }
+    for i in chars_raw:
+        aventuras[i["idAdventure"]]["Characters"].append(i["idCharacter"])
+    return(aventuras)
+def get_id_bystep_adventure():
+    conexion = mysql.connector.connect(
+        host = hostq,
+        port = portq,
+        user = userq,
+        password = passwordq,
+        database = databaseq
+    )
+    cursor = conexion.cursor(dictionary=True)
+    cursor.execute(f"""
+        SELECT idByStep_Adventure, Description, Final_Step
+        FROM bystep_adventure
+        WHERE idAdventure = {game_context['idAdventure']}
+        """)
+    steps_raw = cursor.fetchall()
+    cursor.execute(f"""
+        SELECT idByStep_Adventure, idAnswers_ByStep_Adventure
+        FROM answers_bystep_adventure
+        WHERE idAdventure = {game_context['idAdventure']}
+        """)
+    answers_raw = cursor.fetchall()
+    cursor.close()
+    conexion.close()
+    id_by_steps = {}
+    for i in steps_raw:
+        id_by_steps[i["idByStep_Adventure"]] = {
+            "Description": i["Description"],
+            "answers_in_step": [],
+            "Final_Step": i["Final_Step"]
+            }
+    for i in answers_raw:
+        id_by_steps[i["idByStep_Adventure"]]["answers_in_step"].append(
+            i["idAnswers_ByStep_Adventure"]
+            )
+    for i in id_by_steps:
+        id_by_steps[i]["answers_in_step"] = tuple(id_by_steps[i]["answers_in_step"])
+    return id_by_steps
 def get_first_step_adventure(): #Devuelve el primer paso de una aventura
     conexion = mysql.connector.connect(
-        host = "localhost",
-        port = 3306,
-        user = "root",
-        password = "Qwerty1_",
-        database = "proyectomx"
+        host = hostq,
+        port = portq,
+        user = userq,
+        password = passwordq,
+        database = databaseq
     )
     cursor = conexion.cursor()
     cursor.execute("""
@@ -108,20 +127,63 @@ def get_first_step_adventure(): #Devuelve el primer paso de una aventura
     cursor.close()
     conexion.close()
     return result
-
 def get_characters(): #devuelve el diccionario characters
-    return characters
+    conexion = mysql.connector.connect(
+        host = hostq,
+        port = portq,
+        user = userq,
+        password = passwordq,
+        database = databaseq
+    )
+    cursor = conexion.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT idCharacter, CharacterName
+        FROM characters
+        """)
+    raw = cursor.fetchall()
+    personajes = {}
+    for i in raw:
+        personajes[i["idCharacter"]] = i["CharacterName"]
+    return(personajes)
 
 def getReplayAdventures(): #devuelve el diccionario replayAdventures
+    conexion = mysql.connector.connect(
+        host = hostq,
+        port = portq,
+        user = userq,
+        password = passwordq,
+        database = databaseq
+    )
+    cursor = conexion.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT g.idGame, g.idUser, u.Username, g.idAdventure, a.Name,g.Date, g.idCharacter, c.CharacterName
+        FROM game g
+        JOIN user u ON u.idUser = g.idUser
+        JOIN adventure a ON a.idAdventure = g.idAdventure
+        JOIN characters c ON c.idCharacter = g.idCharacter
+        """)
+    raw = cursor.fetchall()
+    cursor.close()
+    conexion.close()
+    replayAdventures = {}
+    for i in raw:
+        replayAdventures[i["idGame"]] = {
+            "idUser": i["idUser"],
+            "Username": i["Username"],
+            "idAdventure": i["idAdventure"],
+            "Name": i["Name"],
+            "date": i["Date"],
+            "idCharacter": i["idCharacter"],
+            "CharacterName": i["CharacterName"]
+            }
     return replayAdventures
-
 def getChoices(): 
     conexion = mysql.connector.connect(
-        host = "localhost",
-        port = 3306,
-        user = "root",
-        password = "Qwerty1_",
-        database = "proyectomx"
+        host = hostq,
+        port = portq,
+        user = userq,
+        password = passwordq,
+        database = databaseq
     )
     cursor = conexion.cursor()
     cursor.execute("""
@@ -137,11 +199,11 @@ def getChoices():
 
 def getIdGames(): #devuelve un diccionario con los ID de todas las partidas en la BBDD
     conexion = mysql.connector.connect(
-        host = "localhost",
-        port = 3306,
-        user = "root",
-        password = "Qwerty1_",
-        database = "proyectomx"
+        host = hostq,
+        port = portq,
+        user = userq,
+        password = passwordq,
+        database = databaseq
     )
     cursor = conexion.cursor()
     cursor.execute("""
@@ -155,11 +217,11 @@ def getIdGames(): #devuelve un diccionario con los ID de todas las partidas en l
 
 def insertCurrentGame(idGame,idUser,idChar,idAdventure): #guarda en la BBDD la partida actual
     conexion = mysql.connector.connect(
-        host = "localhost",
-        port = 3306,
-        user = "root",
-        password = "Qwerty1_",
-        database = "proyectomx"
+        host = hostq,
+        port = portq,
+        user = userq,
+        password = passwordq,
+        database = databaseq
     )
     cursor = conexion.cursor()
     cursor.execute("""
@@ -173,11 +235,11 @@ def insertCurrentGame(idGame,idUser,idChar,idAdventure): #guarda en la BBDD la p
 def getUsers(): #devuelve un diccionario con toda la tabla de users de la BBDD
     dic = {}
     conexion = mysql.connector.connect(
-        host = "localhost",
-        port = 3306,
-        user = "root",
-        password = "Qwerty1_",
-        database = "proyectomx"
+        host = hostq,
+        port = portq,
+        user = userq,
+        password = passwordq,
+        database = databaseq
     )
     cursor = conexion.cursor()
     cursor.execute("""
@@ -193,11 +255,11 @@ def getUsers(): #devuelve un diccionario con toda la tabla de users de la BBDD
 def getUserIds(): #devuelve Una lista con los ID y el Username
     ides = [[],[]]
     conexion = mysql.connector.connect(
-        host = "localhost",
-        port = 3306,
-        user = "root",
-        password = "Qwerty1_",
-        database = "proyectomx"
+        host = hostq,
+        port = portq,
+        user = userq,
+        password = passwordq,
+        database = databaseq
     )
     cursor = conexion.cursor()
     cursor.execute("""
@@ -213,11 +275,11 @@ def getUserIds(): #devuelve Una lista con los ID y el Username
 
 def insertUser(id, user,password): #Crea un nuevo usuario en la BBDD
     conexion = mysql.connector.connect(
-        host = "localhost",
-        port = 3306,
-        user = "root",
-        password = "Qwerty1_",
-        database = "proyectomx"
+        host = hostq,
+        port = portq,
+        user = userq,
+        password = passwordq,
+        database = databaseq
     )
     cursor = conexion.cursor()
     cursor.execute(f"""
@@ -229,11 +291,11 @@ def insertUser(id, user,password): #Crea un nuevo usuario en la BBDD
     conexion.close()
 def get_table(query): #Permite hacer cualquier Query a la BBDD
     conexion = mysql.connector.connect(
-        host = "localhost",
-        port = 3306,
-        user = "root",
-        password = "Qwerty1_",
-        database = "proyectomx"
+        host = hostq,
+        port = portq,
+        user = userq,
+        password = passwordq,
+        database = databaseq
     )
     cursor = conexion.cursor()
     cursor.execute(query)
@@ -243,11 +305,11 @@ def get_table(query): #Permite hacer cualquier Query a la BBDD
     return result
 def checkUserbdd(user,password): #Checkea un user y pswd en la BBDD 0 no existe,1 todo correcto, -1 contraseña incorrecta
     conexion = mysql.connector.connect(
-        host = "localhost",
-        port = 3306,
-        user = "root",
-        password = "Qwerty1_",
-        database = "proyectomx"
+        host = hostq,
+        port = portq,
+        user = userq,
+        password = passwordq,
+        database = databaseq
     )
     cursor = conexion.cursor()
     cursor.execute("""
@@ -267,11 +329,11 @@ def checkUserbdd(user,password): #Checkea un user y pswd en la BBDD 0 no existe,
 
 def setIdGame(): #Crea una nueva partida en la BBDD
     conexion = mysql.connector.connect(
-        host = "localhost",
-        port = 3306,
-        user = "root",
-        password = "Qwerty1_",
-        database = "proyectomx"
+        host = hostq,
+        port = portq,
+        user = userq,
+        password = passwordq,
+        database = databaseq
     )
     cursor = conexion.cursor()
     cursor.execute("""
@@ -283,11 +345,11 @@ def setIdGame(): #Crea una nueva partida en la BBDD
     conexion.close()
 def insertCurrentChoice(idGame,actual_id_step,id_answer): #Inserta en la BBDD la decision tomada por el jugador
     conexion = mysql.connector.connect(
-        host = "localhost",
-        port = 3306,
-        user = "root",
-        password = "Qwerty1_",
-        database = "proyectomx"
+        host = hostq,
+        port = portq,
+        user = userq,
+        password = passwordq,
+        database = databaseq
     )
     cursor = conexion.cursor()
     cursor.execute("""
@@ -358,7 +420,7 @@ def getFormatedBodyColumns(tupla_texts,tupla_sizes,margin=0): #Formatea tres tex
     
 def getFormatedAdventures(adventures): #Devuelve un string con el diccionario adventures formateado como tabla
     result = \
-        "Adventures".center(100,"=")+"\n\n"+\
+        "Adventures".center(100,"=")+"\n"+\
         "Id Adventure".ljust(14)+"Adventure".ljust(36)+"Description".ljust(50)+"\n"+\
         "*"*100+"\n"
     for i in adventures:
@@ -391,7 +453,7 @@ def getFormatedAnswers(idAnswer,text,lenLine,leftMargin): #Formatea las decision
             result += f" {i}"
             line += len(f" {i}")
     return result
-def getHeadeForTableFromTuples(t_name_columns,t_size_columns,title=""): #Genera una cabecera de tabla
+def getHeaderForTableFromTuples(t_name_columns,t_size_columns,title=""): #Genera una cabecera de tabla
     total = 0
     for i in t_size_columns:
         total += i
@@ -400,14 +462,26 @@ def getHeadeForTableFromTuples(t_name_columns,t_size_columns,title=""): #Genera 
         result += f"{t_name_columns[i]}".ljust(t_size_columns[i])
     result += "\n" + "*"*total
     return result
-def getTableFromDict(tuple_of_keys,weigth_of_columns,dict_of_data): #Genera una tabla en base a un diccionario
+def getTableFromDict(tuple_of_keys, weigth_of_columns, dict_of_data):
     result = ""
     for i in dict_of_data:
+        wrapped_columns = []
+        wrapped_key = textwrap.wrap(str(i), weigth_of_columns[0]) or [""]
+        wrapped_columns.append(wrapped_key)
         for j in range(len(tuple_of_keys)):
-            result += dict_of_data[i][tuple_of_keys[j]].ljust(weigth_of_columns[j])
-        result += "\n"
+            text = str(dict_of_data[i][tuple_of_keys[j]])
+            wrapped = textwrap.wrap(text, weigth_of_columns[j+1]) or [""]
+            wrapped_columns.append(wrapped)
+        max_lines = max(len(col) for col in wrapped_columns)
+        for line in range(max_lines):
+            row = ""
+            for col_index, col in enumerate(wrapped_columns):
+                if line < len(col):
+                    row += col[line].ljust(weigth_of_columns[col_index])
+                else:
+                    row += "".ljust(weigth_of_columns[col_index])
+            result += row + "\n"
     return result
-
 def getOpt(textOpts="",inputOptText="",rangeList=[],exceptions=[]): #Genera un menu
     while True:
         print (textOpts)
@@ -507,11 +581,11 @@ def checkUser(user): #Chekea si un usuario es valido
         return False
 def userExists(user): #Chekea si un usuario ya existe en la BBDD
     conexion = mysql.connector.connect(
-        host = "localhost",
-        port = 3306,
-        user = "root",
-        password = "Qwerty1_",
-        database = "proyectomx"
+        host = hostq,
+        port = portq,
+        user = userq,
+        password = passwordq,
+        database = databaseq
     )
     cursor = conexion.cursor()
     cursor.execute("""
@@ -525,4 +599,52 @@ def userExists(user): #Chekea si un usuario ya existe en la BBDD
     conexion.close()
     return exists
 def replay(choices):
-    print("a") 
+    for i in choices:
+            print("a")
+
+###Diccionarios###
+
+yes = ["y","s","yes","si"]
+
+game_context = {
+    "idGame": "", #digit
+    "idAdventure": "", #digit
+    "nameAdventure": "",
+    "user": "",
+    "idUser": "", #digit
+    "idChar": "", #digit
+    "characterName": ""
+}
+
+#adventures = get_adventures_with_chars()
+    # 1: {
+    #     "Name": "nombre de la aventura id 1",
+    #     "Description": "descripcion de la aventura id 1",
+    #     "Characters": [1,2] #lista con los ides de personajes id 1
+    # }
+
+#characters = get_characters()
+    # 1: "nombre el personaje id 1"
+#idAnswers_ByStep_Aventure = get_answers_bystep_adventure()
+    # (1,3): { #(idAnswers_ByStep_Adventure, idByStep_Adventure)
+    #     "Description": "descripcion del paso",
+    #     "Resolution_answer": "Texto en el campo resolution answer BBDD",
+    #     "NextStep_Adventure": 5 #Id del proximo paso
+    # }
+#id_by_steps = get_id_bystep_adventure()
+    # 1: {
+    #     "Description": "Descripcion del paso", 
+    #     "answers_in_step": (1,2,3), #tupla  con los ids de las opciones en este paso
+    #     "Final_Step": 0, #0 si no es un paso final 1 si si lo es
+    #     }
+#replayAdventures = getReplayAdventures()
+    # "idGame": {
+    #     "idUser": 0,#id del usuario
+    #     "Username": "Nombre del usuario",
+    #     "idAdventure": 1, #id de la aventura
+    #     "Name": "Nombre de la aventura",
+    #     "date": datetime.datetime(2025,12,25,19,5,48), #fecha en formato datetime
+    #     "idCharacter": 1, #id del personaje usado
+    #     "CharacterName": "Nombre del personaje"
+    #     }
+ 

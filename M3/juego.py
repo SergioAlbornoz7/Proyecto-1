@@ -46,7 +46,7 @@ while flgs:
             chk = mod.checkUserbdd(usr, pswrd)
             if chk == 1:
                 mod.game_context["user"] = usr
-                idu = mod.get_table(\
+                idu = mod.get_table( \
                     "SELECT idUser " \
                     "FROM user " \
                     f"WHERE Username = '{usr}'")
@@ -95,9 +95,62 @@ while flgs:
                             if tmm.lower() in (i.lower() for i in mod.yes):
                                 opc = 0
                                 flg_pswc = False
-        else: #Juego
-            print("Juego")
+        else: #Juego 
+            flg_sg = False
+            flg_gopc = False
+            aviable_adv = [0,]
+            for i in mod.get_adventures_with_chars():
+                aviable_adv.append(i)
+            opcaj = mod.getOpt(mod.getFormatedAdventures(mod.get_adventures_with_chars()),"What adventure do you want to play?(0 Go back): ", aviable_adv,)
+            if opcaj.isdigit:
+                opcaj = int(opcaj)
+                if opcaj == 0:
+                    opc = 0
+                else:
+                    for i in aviable_adv[1:]:
+                        if opcaj == i:
+                            mod.game_context["idAdventure"] = opcaj
+                            mod.game_context["nameAdventure"] = mod.get_adventures_with_chars()[i]["Name"]
+                            flg_gopc = True
+                        if flg_gopc:
+                            break
+                    if flg_gopc:
+                            aviable_cha = [0,]
+                            for i in mod.get_adventures_with_chars()[mod.game_context["idAdventure"]]["Characters"]:
+                                aviable_cha.append(i)
+                            cha_tab = ""
+                            for i in mod.get_characters():
+                                if i in aviable_cha:
+                                    cha_tab += f"{i}) {mod.get_characters()[i]}"
+                            opcha = mod.getOpt(cha_tab,"What character do you want to use?(0 Go back): ", aviable_cha,)
+                            if opcha.isdigit:
+                                opcha = int(opcha)
+                                if opcha == 0:
+                                    opc = 0
+                                else:
+                                    flg_copc = False
+                                    for i in aviable_cha[1:]:
+                                        if opcaj == i:
+                                            mod.game_context["idChar"] = opcha
+                                            mod.game_context["characterName"] = mod.get_characters()[i]
+                                            flg_copc = True
+                                        if flg_copc:
+                                            break
+                                    if flg_copc:
+                                        flg_sg = True
+                                    else:
+                                        print("This character id doesn't exist")
+                            else: 
+                                print("Only digit is valid")
+                    else:
+                        print("This adventure id doesn't exist")
+            else: 
+                print("Only digit is valid")
+            if flg_sg: #Empieza el juego
+                print(f"empieza juego {mod.game_context["idAdventure"]} {mod.game_context["nameAdventure"]} con el personaje {mod.game_context["idChar"]} {mod.game_context["characterName"]}")
+                opt = 0
     elif opc == 3: #Replay Adventure
+        mod.getFo
         input("Press enter to continue...")
     elif opc == 4: #Reports
         opcr = int(mod.getOpt( \
