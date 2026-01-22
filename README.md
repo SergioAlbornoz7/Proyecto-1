@@ -2,7 +2,7 @@ Proyecto-1
 
 Instrucciones:
 
-Aqui iran las instrucciones
+se descarga el juego, se ejecuta el script de la bbdd y se configura el SQL del modulo_dic_fun, por ultimo se ejecuta el juego.py
 
 Contacto:
 
