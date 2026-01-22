@@ -147,11 +147,34 @@ while flgs:
             else: 
                 print("Only digit is valid")
             if flg_sg: #Empieza el juego
-                print(f"empieza juego {mod.game_context["idAdventure"]} {mod.game_context["nameAdventure"]} con el personaje {mod.game_context["idChar"]} {mod.game_context["characterName"]}")
+                if mod.getIdGames() == []:
+                    mod.game_context["idGame"] = 0
+                else:
+                    mod.game_context["idGame"] = mod.getIdGames()[-1]+1
+                flg_cont = True
+                print(mod.formatText(mod.get_id_bystep_adventure()[mod.get_first_step_adventure()]["Description"]),105,"/")
+                stps = [[mod.get_first_step_adventure()]]
+                stp = mod.get_first_step_adventure()
+                while flg_cont:
+                    ans = ""
+                    for i in mod.get_id_bystep_adventure()[stp]["answers_in_step"]:
+                        ans += mod.getFormatedAnswers(i,mod.get_answers_bystep_adventure()[(stp,i)]["Description"],105,4)+"\n"
+                    dec = mod.getOpt(ans, "Que quieres hacer?",mod.get_id_bystep_adventure()[stp]["answers_in_step"],[])
+                    stps[-1].append(dec)
+                    stps.append([mod.get_answers_bystep_adventure[dec]["NextStep_Adventure"]])
+                    stp = mod.get_answers_bystep_adventure[dec]["NextStep_Adventure"]
+                    if mod.get_id_bystep_adventure()[stp]["Final_Step"] == 1:
+                        flg_cont = False
+                    print(mod.formatText(mod.get_id_bystep_adventure()[stp]["Description"]),105,"/")
+                mod.insertCurrentGame(mod.game_context["idGame"],mod.game_context["idUser"],mod.game_context["idChar"],mod.game_context["idAdventure"])
+                for i in stps:
+                    mod.insertCurrentChoice(mod.game_context["idGame"],stps[i][0],stps[i][1])
                 opt = 0
     elif opc == 3: #Replay Adventure
-        mod.getFo
+        print(mod.getFormatedTable())
+        mod.replay()
         input("Press enter to continue...")
+        opc = 0
     elif opc == 4: #Reports
         opcr = int(mod.getOpt( \
                 "1)Most used answer\n"

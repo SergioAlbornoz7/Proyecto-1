@@ -197,7 +197,7 @@ def getChoices():
     conexion.close()
     return result
 
-def getIdGames(): #devuelve un diccionario con los ID de todas las partidas en la BBDD
+def getIdGames(): #devuelve una tupla con los ID de todas las partidas en la BBDD
     conexion = mysql.connector.connect(
         host = hostq,
         port = portq,
@@ -210,7 +210,7 @@ def getIdGames(): #devuelve un diccionario con los ID de todas las partidas en l
         SELECT idGame
         FROM game
         """)
-    result = tuple(row[0] for row in cursor.fetchall())
+    result = tuple(i[0] for i in cursor.fetchall())
     cursor.close()
     conexion.close()
     return result
@@ -600,7 +600,12 @@ def userExists(user): #Chekea si un usuario ya existe en la BBDD
     return exists
 def replay(choices):
     for i in choices:
-            print("a")
+        print(formatText(get_id_bystep_adventure()[choices[i][0]]["Description"]),105,"/")
+        ans = ""
+        for j in get_id_bystep_adventure()[i[0]]["answers_in_step"]:
+            ans += getFormatedAnswers(j,get_answers_bystep_adventure()[(i[0],j)]["Description"],105,4)+"\n"
+            print(ans)
+        input("Press enter to continue...")
 
 ###Diccionarios###
 
