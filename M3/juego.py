@@ -158,7 +158,7 @@ while flgs:
                 while flg_cont:
                     ans = ""
                     for i in mod.get_id_bystep_adventure()[stp]["answers_in_step"]:
-                        ans = mod.getFormatedAnswers(i,mod.get_answers_bystep_adventure()[(stp,i)]["Description"],105,4)+"\n"
+                        ans += mod.getFormatedAnswers(i,mod.get_answers_bystep_adventure()[(stp,i)]["Description"],105,4)+"\n"
                     dec = mod.getOpt(ans, "Que quieres hacer?",mod.get_id_bystep_adventure()[stp]["answers_in_step"],[])
                     stps[-1].append(dec)
                     stps.append([mod.get_answers_bystep_adventure[dec]["NextStep_Adventure"]])
@@ -171,8 +171,10 @@ while flgs:
                     mod.insertCurrentChoice(mod.game_context["idGame"],stps[i][0],stps[i][1])
                 opt = 0
     elif opc == 3: #Replay Adventure
-        mod.getFo
+        print(mod.getFormatedTable())
+        mod.replay()
         input("Press enter to continue...")
+        opc = 0
     elif opc == 4: #Reports
         opcr = int(mod.getOpt( \
                 "1)Most used answer\n"

@@ -600,7 +600,12 @@ def userExists(user): #Chekea si un usuario ya existe en la BBDD
     return exists
 def replay(choices):
     for i in choices:
-            print("a")
+        print(formatText(get_id_bystep_adventure()[choices[i][0]]["Description"]),105,"/")
+        ans = ""
+        for j in get_id_bystep_adventure()[i[0]]["answers_in_step"]:
+            ans += getFormatedAnswers(j,get_answers_bystep_adventure()[(i[0],j)]["Description"],105,4)+"\n"
+            print(ans)
+        input("Press enter to continue...")
 
 ###Diccionarios###
 
