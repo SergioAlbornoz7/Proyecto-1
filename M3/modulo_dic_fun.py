@@ -207,8 +207,9 @@ def getIdGames(): #devuelve una tupla con los ID de todas las partidas en la BBD
     )
     cursor = conexion.cursor()
     cursor.execute("""
-        SELECT idGame
-        FROM game
+        SELECT idGame 
+        FROM game 
+        ORDER BY idGame ASC
         """)
     result = tuple(i[0] for i in cursor.fetchall())
     cursor.close()
@@ -319,6 +320,8 @@ def checkUserbdd(user,password): #Checkea un user y pswd en la BBDD 0 no existe,
         """, (user,)
         )
     uspsw = tuple(cursor.fetchall())
+    cursor.close()
+    conexion.close()
     if not uspsw:
         return 0
     else:
@@ -492,8 +495,7 @@ def getOpt(textOpts="",inputOptText="",rangeList=[],exceptions=[]): #Genera un m
         for i in exceptions:
             if opc == i:
                 return rangeList[-1]
-        else:
-            print("Invalid option, select a valid one")
+        print("Invalid option, select a valid one")
     
 def getFormatedTable(queryTable,title=""): #Genera una tabla en base a una tupla
     columns = len(queryTable[0])
@@ -599,12 +601,12 @@ def userExists(user): #Chekea si un usuario ya existe en la BBDD
     conexion.close()
     return exists
 def replay(choices):
-    for i in choices:
-        print(formatText(get_id_bystep_adventure()[choices[i][0]]["Description"]),105,"/")
+    for step, answer in choices:
+        print(formatText(get_id_bystep_adventure()[step]["Description"], 105, "/"))
         ans = ""
-        for j in get_id_bystep_adventure()[i[0]]["answers_in_step"]:
-            ans += getFormatedAnswers(j,get_answers_bystep_adventure()[(i[0],j)]["Description"],105,4)+"\n"
-            print(ans)
+        for j in get_id_bystep_adventure()[step]["answers_in_step"]:
+            ans += getFormatedAnswers(j,get_answers_bystep_adventure()[(step,j)]["Description"],105,4)+"\n"
+        print(ans)
         input("Press enter to continue...")
 
 ###Diccionarios###

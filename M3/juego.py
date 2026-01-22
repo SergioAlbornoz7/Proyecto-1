@@ -102,7 +102,7 @@ while flgs:
             for i in mod.get_adventures_with_chars():
                 aviable_adv.append(i)
             opcaj = mod.getOpt(mod.getFormatedAdventures(mod.get_adventures_with_chars()),"What adventure do you want to play?(0 Go back): ", aviable_adv,)
-            if opcaj.isdigit:
+            if opcaj.isdigit():
                 opcaj = int(opcaj)
                 if opcaj == 0:
                     opc = 0
@@ -121,16 +121,16 @@ while flgs:
                             cha_tab = ""
                             for i in mod.get_characters():
                                 if i in aviable_cha:
-                                    cha_tab += f"{i}) {mod.get_characters()[i]}"
+                                    cha_tab += f"{i}) {mod.get_characters()[i]}\n"
                             opcha = mod.getOpt(cha_tab,"What character do you want to use?(0 Go back): ", aviable_cha,)
-                            if opcha.isdigit:
+                            if opcha.isdigit():
                                 opcha = int(opcha)
                                 if opcha == 0:
                                     opc = 0
                                 else:
                                     flg_copc = False
                                     for i in aviable_cha[1:]:
-                                        if opcaj == i:
+                                        if opcha == i:
                                             mod.game_context["idChar"] = opcha
                                             mod.game_context["characterName"] = mod.get_characters()[i]
                                             flg_copc = True
@@ -161,14 +161,14 @@ while flgs:
                         ans += mod.getFormatedAnswers(i,mod.get_answers_bystep_adventure()[(stp,i)]["Description"],105,4)+"\n"
                     dec = mod.getOpt(ans, "Que quieres hacer?",mod.get_id_bystep_adventure()[stp]["answers_in_step"],[])
                     stps[-1].append(dec)
-                    stps.append([mod.get_answers_bystep_adventure[dec]["NextStep_Adventure"]])
-                    stp = mod.get_answers_bystep_adventure[dec]["NextStep_Adventure"]
+                    stps.append([mod.get_answers_bystep_adventure()[(stp, dec)]["NextStep_Adventure"]])
+                    stp = mod.get_answers_bystep_adventure()[(stp, dec)]["NextStep_Adventure"]
                     if mod.get_id_bystep_adventure()[stp]["Final_Step"] == 1:
                         flg_cont = False
-                    print(mod.formatText(mod.get_id_bystep_adventure()[stp]["Description"]),105,"/")
+                    print(mod.formatText(mod.get_id_bystep_adventure()[stp]["Description"],105,"/"))
                 mod.insertCurrentGame(mod.game_context["idGame"],mod.game_context["idUser"],mod.game_context["idChar"],mod.game_context["idAdventure"])
-                for i in stps:
-                    mod.insertCurrentChoice(mod.game_context["idGame"],stps[i][0],stps[i][1])
+                for step, answer in stps:
+                    mod.insertCurrentChoice(mod.game_context["idGame"], step, answer)
                 opt = 0
     elif opc == 3: #Replay Adventure
         rq = mod.get_table( \
@@ -181,7 +181,7 @@ while flgs:
             "JOIN characters c ON g.idCharacter = c.idCharacter " \
             "ORDER BY g.Date DESC"
             )
-        rg = mod.getOpt(mod.getFormatedTable(rq,"Partidas"),"Que partida quieres rejugar?: ",mod.getIdGames,[])
+        rg = mod.getOpt(mod.getFormatedTable(rq,"Partidas"),"Que partida quieres rejugar?: ",mod.getIdGames(),[])
         tr = mod.get_table(\
             "SELECT c.idByStep_Adventure, c.idAnswers_ByStep_Adventure "
             "FROM choices c "
