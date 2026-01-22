@@ -171,8 +171,23 @@ while flgs:
                     mod.insertCurrentChoice(mod.game_context["idGame"],stps[i][0],stps[i][1])
                 opt = 0
     elif opc == 3: #Replay Adventure
-        print(mod.getFormatedTable())
-        mod.replay()
+        rq = mod.get_table( \
+            "SELECT 'Id', 'Username', 'Name', 'CharacterName', 'date' " \
+            "UNION ALL " \
+            "SELECT g.idGame, u.Username, adv.Name, c.CharacterName, g.Date " \
+            "FROM game g " \
+            "JOIN user u ON g.idUser = u.idUser " \
+            "JOIN adventure adv ON g.idAdventure = adv.idAdventure " \
+            "JOIN characters c ON g.idCharacter = c.idCharacter " \
+            "ORDER BY g.Date DESC"
+            )
+        rg = mod.getOpt(mod.getFormatedTable(rq,"Partidas"),"Que partida quieres rejugar?: ",mod.getIdGames,[])
+        tr = mod.get_table(\
+            "SELECT c.idByStep_Adventure, c.idAnswers_ByStep_Adventure "
+            "FROM choices c "
+            "WHERE c.idGame = %s "
+            "ORDER BY c.idByStep_Adventure ASC" % (rg))
+        mod.replay(tr)
         input("Press enter to continue...")
         opc = 0
     elif opc == 4: #Reports
