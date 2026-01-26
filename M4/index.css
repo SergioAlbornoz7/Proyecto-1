@@ -1,0 +1,393 @@
+/*Parte encabezado*/
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+#inicio {
+  display: flex;
+  flex-direction: column;
+  font-family: "Oswald", sans-serif;
+  background-color: #f5f5f5;
+  height: 100vh;
+}
+main {
+  flex: 1;
+}
+/*Fuentes de letras*/
+.oswald-uniquifier {
+  font-family: "Oswald", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: weight;
+  font-style: normal;
+}
+.encabezado{
+    background-color: lightblue;
+    padding:5rem;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    background-size: cover;
+}
+.encabezad1{
+    margin-top: -3rem;
+    letter-spacing: 0.5rem;
+    display: flex;
+    align-items: center;
+
+}
+
+.encabezad1 h1{
+   text-decoration: underline;
+   text-shadow: 2px 2px 9px #ece4e4;
+}
+.encabezad1:hover{
+    color: darkblue;
+    cursor: pointer;
+}
+nav a{
+    margin: 0 6rem;
+    text-decoration: underline;
+    font-size: 1.2rem;
+    color: black;
+    font-weight: bold;
+}
+/*MAIN*/
+/* --- HERO PRINCIPAL --- */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 4rem;
+  gap: 3rem;
+  background: linear-gradient(135deg, #f0f4ff, #d9e4ff);
+  min-height: 100vh;
+}
+
+/* Imagen principal */
+.imagen {
+  width: 250px;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  transition: transform .4s ease, box-shadow .4s ease;
+}
+
+.imagen:hover {
+  transform: scale(1.1);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+}
+
+/* Texto publicitario */
+.texto-publicitario {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.cajas {
+  background: white;
+  padding: 1rem 2rem;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  font-weight: bold;
+  transition: transform .3s ease;
+}
+
+.cajas:hover {
+  transform: translateY(-5px);
+}
+
+/* --- SECCIÓN "CÓMO SE JUEGA" --- */
+.hero1 {
+  width: 80%;
+  max-width: 700px;
+  background: white;
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.caja2 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* Tarjeta animada */
+.card {
+  background: #eef3ff;
+  padding: 1.5rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  animation: aparecer 1s linear both;
+  animation-timeline: view();
+  animation-range: entry 60% cover 40%;
+}
+
+/* Lista */
+ul {
+  padding-left: 1rem;
+}
+
+.fila {
+  margin: .5rem 0;
+  font-size: 1.1rem;
+}
+
+.fila::before {
+  content: "✔️ ";
+  color: #2ecc71;
+  animation: aparecer 1s linear both;
+  animation-timeline: view();
+  animation-range: entry 60% cover 40%;
+}
+
+/* --- FICHA VECTORIAL --- */
+.vectorial {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.vectorial h2 {
+  margin-bottom: 1rem;
+  font-size: 1.6rem;
+}
+
+.ficha {
+  width: 120px;
+  fill: #2ecc71;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.ficha .centro {
+  fill: #145a32;
+  animation: brillo 2s ease-in-out infinite alternate;
+}
+
+/* Animaciones */
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: .8; }
+  50% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: .8; }
+}
+
+@keyframes brillo {
+  from { fill: #145a32; }
+  to { fill: #f1c40f; }
+}
+
+/*-----------*/
+
+/*MAIN*/
+/*Parte final con copyright y iconos para todas las páginas*/
+.footer {
+  background-color: #111;
+  padding: 20px;
+}
+
+.footer-right {
+  display: flex;
+  justify-content: flex-end; 
+  align-items: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.social-icons a {
+  color: white;
+  font-size: 28px;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.social-icons a:hover {
+  color: #00ff88;
+  transform: scale(1.2);
+}
+
+.copyright {
+  color: #aaa;
+  font-size: 14px;
+}
+
+/*HISTORIA*/
+#historia {
+  display: flex;
+  flex-direction: column;
+  font-family: "Oswald", sans-serif;
+  background-color: #f5f5f5;
+  height: 600vh;
+}
+#historia1{
+  display: flex;
+  flex-direction: column;
+  gap: 5rem;
+  font-family: "Oswald", sans-serif;
+  background-color: #f5f5f5;
+  padding: 5rem 0;
+}
+.historia-conten{
+  display: flex;
+  align-items: center;
+  gap: 7rem;
+  margin-left: 10%;
+  max-width: 80%;
+
+
+}
+.tarjeta-descripcion{
+  background-color: rgb(243, 238, 238);
+  display: flex;
+  flex-direction: column;
+  width: 15rem;
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.tarjeta-descripcion img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+.tarjeta-descripcion h3 {
+  margin-top: 1rem;
+}
+.descripcion {
+  background-color: wheat;
+  padding: 3rem;
+  border-radius: 8px;
+  flex: 1;
+}
+.tarjeta2 {
+  width: 15rem;
+  height: 22rem;
+  perspective: 1000px;
+}
+.tarjeta-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+.tarjeta2:active .tarjeta-inner {
+  transform: rotateY(180deg);
+}
+.tarjeta2:hover .tarjeta-inner {
+  transform: rotateY(180deg);
+}
+.tarjeta2-front,
+.tarjeta2-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+.tarjeta2-back {
+  transform: rotateY(180deg);
+}
+/*-----------------------------------------*/
+
+/*CONTACTO*/
+#contacto {
+  display: flex;
+  flex-direction: column;
+  font-family: "Oswald", sans-serif;
+  background-color: #f5f5f5;
+  height: 200vh;
+}
+/*ABOUT_US*/
+#about_us {
+  display: flex;
+  flex-direction: column;
+  font-family: "Oswald", sans-serif;
+  background-color: #f5f5f5;
+  height: 200vh;
+}
+/*INSTRUCCIONES*/
+#instrucciones {
+  display: flex;
+  flex-direction: column;
+  font-family: "Oswald", sans-serif;
+  background-color: #f5f5f5;
+  height: 300vh;
+}
+.caja-ins{
+  margin-top: 10rem;
+  margin-bottom: 10rem;
+  margin-right: 10rem;
+  margin-left: 10rem;
+  padding: 3rem;
+  display: flex;
+  background-color: gray;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 3rem;
+
+}
+.tarjeta{
+  background-color: rgb(243, 238, 238);
+  display: flex;
+  flex-direction: column;
+  width: 15rem;
+  padding: 4rem;
+  border-radius: 8px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.tarjeta:hover {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.25);
+}
+.tarjeta img{
+  border: 2px solid;
+  width: 15rem;
+  height: 10rem;
+}
+
+.instrucciones{
+  text-align: center;
+}
+.instrucciones h1{
+  text-decoration:underline;
+}
+
+.contenedor-mecanica{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 3rem;
+}
+.tarjeta1{
+  background-color: rgb(184, 176, 176);
+  display: flex;
+  flex-direction: column;
+  width: 15rem;
+  padding: 4rem;
+  border-radius: 8px;
+  text-align: center;
+  margin-left: 3rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+ 
+}
+.tarjeta1:hover {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.25);
+}
+.tarjeta1 img{
+  border: 2px solid;
+  width: 15rem;
+  height: 10rem;
+}
